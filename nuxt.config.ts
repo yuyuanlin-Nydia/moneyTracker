@@ -5,9 +5,11 @@ export default defineNuxtConfig({
       autoImports: ['defineStore', 'acceptHMRUpdate'],
     }],
     'nuxt-icon',
-  ],
-  imports: { // 自動import 不用import {useUser} from '~/stores/User'
-    dirs: ['stores', 'const', 'helper'],
+    'nuxt-headlessui'
+    ],
+  imports: { 
+    // 自動import 不用import {useUser} from '~/stores/User'
+    dirs: ['stores', 'const', 'helper','composable', 'types'],
   },
   css: [
     '@/assets/css/main.css',

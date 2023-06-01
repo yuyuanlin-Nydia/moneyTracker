@@ -1,49 +1,28 @@
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import DefaultDialog from '~/components/DefaultDialog.vue';
+import EditExpenseDialog from '~/components/EditExpenseDialog.vue';
 
-const isDialogShow = ref<boolean>(false)
+const { $dialog, $toast } = useNuxtApp();
 const query = ref<IWalletQuery>({
   type: WalletTypeEnum.Expense,
   category: ['all'],
   date: '5/7'
 })
-// const categoryOption = ref([
-//   { value: 1, text: 'food' },
-//   { value: 2, text: 'grocery' },
-// ])
 const walletTypeOption = ref(ToArray(WalletTypeEnum))
 const expenseTypeOption = ref(ToArray(ExpenseCategoryEnum))
 const incomeTypeOption = ref(ToArray(IncomeCategoryEnum))
-
 const categoryOption = computed(()=>{
   return (query.value.type === WalletTypeEnum.Expense
     ? expenseTypeOption.value
     : incomeTypeOption.value)
 })
-const result = computed(() => { return 'hello' })
-
-const searchQuery = ref({
-  type: 1,
-  category: 1,
-  dateRange: '5/8',
-})
 const date = ref<any[]|null>(null)
 const dateRangeTag = ['This month', 'This week', 'Today' ]
-
 onMounted(() => {
   selectDateRange('This week')
 })
-
-function saveEdit() {
-  console.log('saveEdit')
-  isDialogShow.value = false
-}
-
-function openDialog(item: IWalletQuery) {
-  query.value = item
-  isDialogShow.value = true
-}
 
 function selectDateRange(rangeTag: string ){
   let startDate, endDate
@@ -66,59 +45,36 @@ function selectDateRange(rangeTag: string ){
   date.value = [startDate, endDate];
 }
 
+// Edit Dialog
+function openEditDialog(walletItem: IWalletItem) {
+  $dialog
+    .open( 
+      EditExpenseDialog,{
+        title: 'Edit',
+        walletItem,
+        categoryOption:categoryOption.value
+      }
+    )
+    .onOk(()=>{
+      $toast.success('Edit successfully!')
+    })
+}
+
+// Delete Dialog
+function openDeleteDialog(data: IWalletItem) {
+  $dialog
+  .open(DefaultDialog,{
+    title: 'Confirmation',
+    okText: 'Delete',
+    content: `Are you sure to delete item-${data.item}?`
+  })
+  .onOk(()=>{
+      $toast.success('Delete successfully!')
+  })
+}
 </script>
 
 <template>
-  <Teleport to="#modal-container">
-    <Dialog
-      v-if="isDialogShow"
-      v-model:is-dialog-show="isDialogShow"
-      title="Edit Item"
-      @save="saveEdit"
-    >
-      <template #content>
-        <div class="my-3">
-          <label for="" class="inline-block w-20">Category :</label>
-          <select
-            v-model="query.category"
-            class="input w-60"
-          >
-            <option
-              v-for="category in categoryOption"
-              :key="category.value"
-              :value="category.value"
-            >
-              {{ category.text }}
-            </option>
-          </select>
-        </div>
-        <div class="my-3">
-          <label for="" class="inline-block w-20">Date :</label>
-          <input
-            v-model="query.date"
-            type="text"
-            class="input w-60"
-          >
-        </div>
-        <div class="my-3">
-          <label for="" class="inline-block w-20">Item :</label>
-          <input
-            v-model="query.item"
-            type="text"
-            class="input w-60"
-          >
-        </div>
-        <div class="my-3">
-          <label for="" class="inline-block w-20">Amount :</label>
-          <input
-            :value="query.amount"
-            type="text"
-            class="input w-60"
-          >
-        </div>
-      </template>
-    </Dialog>
-  </Teleport>
   <div class="text-lg">
     <div class="mb-2">
       <span>Type : </span>
@@ -153,8 +109,9 @@ function selectDateRange(rangeTag: string ){
     <div class="mb-2">
       <div class="inline-block">Date : </div>
       <div class="inline-block w-80 p-1 mr-2">
-        <VueDatePicker 
-          style="display: inline;"
+        <vue-date-picker
+          auto-apply
+          format="yyyy-MM-dd"
           v-model="date"
           :enable-time-picker="false"
           range 
@@ -190,8 +147,13 @@ function selectDateRange(rangeTag: string ){
             <span class="mx-2 text-blue-400">+120</span>
             <Icon
               name="material-symbols:edit"
+              class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl mr-1.5"
+              @click="openEditDialog({type:1, category:2, item:'Guava', amount:150, date: '2023/5/21'})"
+            />
+            <Icon
+              name="material-symbols:delete"
               class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
-              @click="openDialog({ category: 2, date: '5 / 20', item: 'Guava', amount: 120 })"
+              @click="openDeleteDialog({type:1, category:2, item:'Guava', amount:150, date: '2023/5/21'})"
             />
           </div>
         </li>
