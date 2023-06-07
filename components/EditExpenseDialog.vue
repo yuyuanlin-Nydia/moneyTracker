@@ -4,14 +4,38 @@ import "@vuepic/vue-datepicker/dist/main.css";
 
 const props = defineProps<{
   title: string,
-  walletItem: IWalletItem,
-  categoryOption: categories[]
+  walletItem: IWalletItem
 }>()
-const {dialogRef,onDialogOK, onDialogHide} = useDialogPlugin();
+const walletTypeOption = ToArray(WalletTypeEnum)
+const expenseTypeOption = ref(expenseCategory)
+const incomeTypeOption = ref(incomeCategory)
+const { dialogRef, onDialogOK, onDialogHide } = useDialogPlugin();
 const localWalletItem = ref(props.walletItem)
+const categoryOption = computed(()=>{
+  return (localWalletItem.value.type === 'Expense'
+    ? expenseTypeOption.value
+    : incomeTypeOption.value)
+})
+const date = computed({
+  get() { 
+    return dayjsTz(localWalletItem.value.date).format(DateEnum.dateFormat) 
+  },
+  set(newValue) {
+    localWalletItem.value.date = dayjsTz(newValue).format(DateEnum.dateFormat) 
+  }
+})
+
+watch(
+  () => localWalletItem.value.type, 
+  () => {
+    localWalletItem.value.category = categoryOption.value[0]
+  }
+)
+
 function confirm(){
-  onDialogOK()
+  onDialogOK({...localWalletItem.value})
 }
+
 function cancel(){
   onDialogHide()
 }
@@ -26,6 +50,21 @@ function cancel(){
   >
     <template #content>
       <div class="my-3">
+        <label for="" class="inline-block w-20">Type :</label>
+        <select
+          v-model="localWalletItem.type"
+          class="input w-60"
+        >
+          <option
+            v-for="walletType in walletTypeOption"
+            :key="walletType.name"
+            :value="walletType.name"
+          >
+            {{ walletType.name }}
+          </option>
+        </select>
+      </div>
+      <div class="my-3">
         <label for="" class="inline-block w-20">Category :</label>
         <select
           v-model="localWalletItem.category"
@@ -33,10 +72,10 @@ function cancel(){
         >
           <option
             v-for="category in categoryOption"
-            :key="category.value"
-            :value="category.value"
+            :key="category"
+            :value="category"
           >
-            {{ category.name }}
+            {{ category }}
           </option>
         </select>
       </div>
@@ -48,7 +87,7 @@ function cancel(){
             format="yyyy-MM-dd"
             menu-class-name="dp-custom-menu"
             position="left"
-            v-model="localWalletItem.date"
+            v-model="date"
             :enable-time-picker="false"
           />
         </div>
@@ -64,7 +103,7 @@ function cancel(){
       <div class="my-3">
         <label for="" class="inline-block w-20">Amount :</label>
         <input
-          :value="localWalletItem.amount"
+          v-model="localWalletItem.amount"
           type="text"
           class="input w-60"
         >

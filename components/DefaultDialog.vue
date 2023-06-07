@@ -2,12 +2,13 @@
 const props= defineProps<{
   title:string,
   content:string,
-  okText?:string
+  okText?:string,
+  data?: Record<string, any>
 }>()
 const {dialogRef,onDialogOK, onDialogHide} = useDialogPlugin();
 
 function confirm(){
-  onDialogOK()
+  onDialogOK({ ...props.data })
 }
 function cancel(){
   onDialogHide()
