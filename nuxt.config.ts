@@ -5,7 +5,8 @@ export default defineNuxtConfig({
       autoImports: ['defineStore', 'acceptHMRUpdate'],
     }],
     'nuxt-icon',
-    'nuxt-headlessui'
+    'nuxt-headlessui',
+    '@vueuse/nuxt'
     ],
   imports: { 
     // 自動import 不用import {useUser} from '~/stores/User'
@@ -23,4 +24,9 @@ export default defineNuxtConfig({
   build: {
     transpile: ["@vuepic/vue-datepicker"],
   },
+  runtimeConfig: {
+    public: {
+      apiBaseURL: 'http://localhost:5000'
+    }
+  }
 })
