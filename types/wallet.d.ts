@@ -1,16 +1,25 @@
 interface IWalletQuery{
-  type: number, 
-  category: any[] ,
-  date: string
+  type: string, 
+  category: string[] ,
+  date: Dayjs[]
 }
 
-type IWalletItem = Pick<IWalletQuery, 'type' | 'date'> & {
-  category: number,
+type IWalletItem = Pick<IWalletQuery, 'type'> & {
+  _id: string,
+  category: string,
   amount: number,
-  item: string
+  item: string,
+  date: string,
+  recordAt: string
 }
 
 interface categories{
   value: string,
   name: string
+}
+
+interface getWalletRes{
+  _id: string, 
+  total: number,
+  list: IWalletItem[]
 }

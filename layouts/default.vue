@@ -13,8 +13,8 @@ watch(
 </script>
 
 <template>
-  <div class="grid min-h-screen grid-cols-6 h-full bg-primary-600 text-white">
-    <nav class="sticky top-0 w-40 h-screen flex flex-col text-lg col-span-1 text-right text-primary-100 border-r-2 border-primary-400 px-2">
+  <div class="grid min-h-screen grid-cols-8 h-full bg-primary-600 text-white">
+    <nav class="sticky top-0 h-screen flex flex-col text-lg col-span-1  text-right text-primary-100 border-r-2 border-primary-400 px-4">
       <NuxtLink to="/" class=" font-bold text-white py-6 pr-2">
         <Icon name="solar:chat-round-money-bold" class="text-4xl rounded bg-primary-200 md:text-xl" />
         <span class="hidden md:inline">
@@ -49,7 +49,7 @@ watch(
         <Icon class="mr-2 text-4xl md:text-xl" name="clarity:logout-solid" />
       </a>
     </nav>
-    <main class="px-8 col-span-5">
+    <main class="px-8 col-span-7">
       <h5 class=" text-4xl font-bold py-6">
         {{ routeName }}
       </h5>

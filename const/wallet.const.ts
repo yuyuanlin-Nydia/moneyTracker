@@ -3,15 +3,7 @@ export enum WalletTypeEnum {
   Expense = 2,
 }
 
-export enum ExpenseCategoryEnum {
-  Food = 1,
-  Grocery = 2,
-  Transportation = 3,
-}
+export const WalletType = ["Income", "Expense"]
+export const expenseCategory = ["Food", "Grocery", "Transportation" ]
+export const incomeCategory = ["Salary", "Invest", "PartTime" ]
 
-
-export enum IncomeCategoryEnum {
-  Salary = 1,
-  Invest = 2,
-  PartTime = 3,
-}

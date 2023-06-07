@@ -5,44 +5,66 @@ import DefaultDialog from '~/components/DefaultDialog.vue';
 import EditExpenseDialog from '~/components/EditExpenseDialog.vue';
 
 const { $dialog, $toast } = useNuxtApp();
+const walletTypeOption = ref(WalletType)
+const expenseTypeOption = ref(expenseCategory)
+const incomeTypeOption = ref(incomeCategory)
 const query = ref<IWalletQuery>({
-  type: WalletTypeEnum.Expense,
-  category: ['all'],
-  date: '5/7'
+  type: 'Expense',
+  category: expenseTypeOption.value,
+  date: []
 })
-const walletTypeOption = ref(ToArray(WalletTypeEnum))
-const expenseTypeOption = ref(ToArray(ExpenseCategoryEnum))
-const incomeTypeOption = ref(ToArray(IncomeCategoryEnum))
+const dateRangeTag = ['This month', 'This week', 'Today' ]
+const walletList = ref<getWalletRes[]>([])
 const categoryOption = computed(()=>{
-  return (query.value.type === WalletTypeEnum.Expense
+  return (query.value.type === "Expense"
     ? expenseTypeOption.value
     : incomeTypeOption.value)
 })
-const date = ref<any[]|null>(null)
-const dateRangeTag = ['This month', 'This week', 'Today' ]
-onMounted(() => {
-  selectDateRange('This week')
-})
+const loading = ref<boolean>(false)
 
+selectDateRange('This week')
+fetchWallet()
+
+async function fetchWallet(){
+  try{
+    const result = await getWallet(query.value)
+    walletList.value = result
+    loading.value = true;
+  } catch(err) {
+    console.error(err)
+  }finally{
+    loading.value = false;
+  }
+}
+function itemDateFormat(date:string){
+  return dayjsTz(date).format(DateEnum.dateFormat)
+}
 function selectDateRange(rangeTag: string ){
-  let startDate, endDate
+  let startDate = dayjsTz().startOf('month').startOf('day'), 
+      endDate = dayjsTz().endOf('month').startOf('day')
   switch (rangeTag) {
     case 'This month':
-      startDate = dayjsTz().startOf('month');
-      endDate = dayjsTz().endOf('month');
-      break;  
+      startDate = dayjsTz().startOf('month').startOf('day');
+      endDate = dayjsTz().endOf('month').startOf('day');
+      break;
     case 'This week':
-       startDate = dayjsTz().isoWeekday(1);
-       endDate = dayjsTz().isoWeekday(7);
+       startDate = dayjsTz().isoWeekday(1).startOf('day');
+       endDate = dayjsTz().isoWeekday(7).startOf('day');
        break;
     case 'Today':
-       startDate = dayjsTz();
-       endDate = dayjsTz();
+       startDate = dayjsTz().startOf('day');
+       endDate = dayjsTz().startOf('day');
        break;
     default:
       break;
   }
-  date.value = [startDate, endDate];
+  query.value.date = [startDate, endDate];
+}
+
+function amountHTML(item: IWalletItem){
+  return item.type === 'Expense'
+  ? `<span class="mx-2 text-red-400">-${item.amount.toLocaleString()}</span>`
+  : `<span class="mx-2 text-blue-400">+${item.amount.toLocaleString()}</span>`
 }
 
 // Edit Dialog
@@ -51,11 +73,12 @@ function openEditDialog(walletItem: IWalletItem) {
     .open( 
       EditExpenseDialog,{
         title: 'Edit',
-        walletItem,
-        categoryOption:categoryOption.value
+        walletItem: {...walletItem},
       }
     )
-    .onOk(()=>{
+    .onOk(async (data)=>{
+      await editSingleWallet(data);
+      walletList.value = await getWallet(query.value)
       $toast.success('Edit successfully!')
     })
 }
@@ -66,10 +89,14 @@ function openDeleteDialog(data: IWalletItem) {
   .open(DefaultDialog,{
     title: 'Confirmation',
     okText: 'Delete',
-    content: `Are you sure to delete item-${data.item}?`
+    content: `Are you sure to delete item-${data.item}?`,
+    data
   })
-  .onOk(()=>{
-      $toast.success('Delete successfully!')
+  .onOk(async (data)=>{
+    console.log(data)
+    await deleteSingleWallet(data._id);
+    walletList.value = await getWallet(query.value)
+    $toast.success('Delete successfully!')
   })
 }
 </script>
@@ -77,42 +104,44 @@ function openDeleteDialog(data: IWalletItem) {
 <template>
   <div class="text-lg">
     <div class="mb-2">
-      <span>Type : </span>
+      <span class="inline-block w-24">Type : </span>
       <select
-        v-model="query.type"
+        v-model.number="query.type"
         class="text-black w-56 p-1 rounded"
       >
         <option
           v-for="walletType in walletTypeOption"
-          :key="walletType.value"
-          :value="walletType.value"
+          :key="walletType"
+          :value="walletType"
         >
-          {{ walletType.name }}
+          {{ walletType }}
         </option>
       </select>
     </div>
     <div class="mb-2">
-      <span>Category : </span>
+      <span class="inline-block w-24">Category : </span>
       <div 
         class="inline mr-2" 
         v-for="category in categoryOption"
-        :key="category.value">
+        :key="category">
         <input 
           class="mr-1"
           type="checkbox" 
-          :value=category.value
-          :id="category.name"
+          :value=category
+          :id="category"
+          checked
+          v-model="query.category"
         > 
-        <label :for="category.name">{{category.name}}</label>
+        <label :for="category">{{category}}</label>
       </div>
     </div>
     <div class="mb-2">
-      <div class="inline-block">Date : </div>
+      <span class="inline-block w-24">Date : </span>
       <div class="inline-block w-80 p-1 mr-2">
         <vue-date-picker
           auto-apply
           format="yyyy-MM-dd"
-          v-model="date"
+          v-model="query.date"
           :enable-time-picker="false"
           range 
         />
@@ -129,35 +158,61 @@ function openDeleteDialog(data: IWalletItem) {
   </div>
 
   <div class="border-b border-gray-500">
-      <button class="btn bg-secondary-100 text-white my-4">
+      <button 
+        @click="fetchWallet"
+        class="btn bg-secondary-100 text-white my-4"
+      >
         Search
       </button>
   </div>
   <br>
+  <template v-if="loading">
+    <div class="h-1/3 relative">
+      <Loading :show=loading />
+    </div>
+  </template>
+  <template v-else-if="walletList.length">
   <ul>
-    <li class="bg-primary-100 rounded-lg p-3 mb-3">
+    <li 
+      v-for="{list, _id, total} in walletList"
+      :key="_id"
+      class="bg-primary-100 rounded-lg p-3 mb-3"
+    >
       <div class="text-xl font-bold mb-2">
         <Icon name="ic:sharp-plus" class="inline-block align-middle bg-secondary-100 rounded text-2xl mr-2" />
-        <span>Food $568</span>
+        <span>{{ _id }} ${{total.toLocaleString()}}</span>
       </div>
-      <ul class="pl-8 text-md">
-        <li class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100">
-          <div>5/20 Guava</div>
+      
+        <ul class="pl-8 text-md">
+        <li 
+          v-for="item in list"
+          :key="item._id"
+          class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100"
+        >
+          <div>{{itemDateFormat(item.date)}} {{item.item}}</div>
           <div>
-            <span class="mx-2 text-blue-400">+120</span>
+            <span v-html="amountHTML(item)"></span>
             <Icon
               name="material-symbols:edit"
               class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl mr-1.5"
-              @click="openEditDialog({type:1, category:2, item:'Guava', amount:150, date: '2023/5/21'})"
+              @click="openEditDialog(item)"
             />
             <Icon
               name="material-symbols:delete"
               class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
-              @click="openDeleteDialog({type:1, category:2, item:'Guava', amount:150, date: '2023/5/21'})"
+              @click="openDeleteDialog(item)"
             />
           </div>
-        </li>
-      </ul>
+        </li> 
+        </ul>
     </li>
   </ul>
+  </template>
+  <template v-else>
+    <ul>
+      <li class="font-bold flex justify-center text-2xl p-2">
+        No data available!
+      </li>
+    </ul>
+  </template>
 </template>
