@@ -20,8 +20,8 @@ $size: 48px;
 
 .spinner {
   position: absolute;
-  top: calc(50% - #{$size / 2});
-  left: calc(50% - #{$size / 2});
+  top: calc(50% - #{calc($size / 2)});
+  left: calc(50% - #{calc($size / 2)});
   width: $size;
   height: $size;
   animation: spinner 0.75s linear infinite;

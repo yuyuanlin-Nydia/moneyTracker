@@ -21,7 +21,7 @@ module.exports = {
         },
         secondary: {
           100: '#F59B33',
-          200: '#FF823D',
+          200: '#f3912f',
         },
         pink: {
           100: '#FE3191',
