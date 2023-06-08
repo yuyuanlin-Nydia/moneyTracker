@@ -27,7 +27,7 @@
               ENTERTAINMENT: $555
             </li>
           </ul> -->
-          <button class="btn justify-self-end w-36 bg-secondary-100 my-2 ">
+          <button class="btn-primary justify-self-end w-36 my-2 ">
             More Details
           </button>
           <div class="center p-2 bg-info-500 rounded-xl">

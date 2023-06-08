@@ -27,12 +27,12 @@ export async function getWallet(query: IWalletQuery): Promise<getWalletRes[]>{
   return await useApi('/wallet/getAll', query)
 }
 
-export function addSingleWallet(id: string){
-  return useApi('/wallet/addOne', { id })
+export function addSingleWallet(query: IWalletItem){
+  return useApi('/wallet/addOne', query)
 }
 
 export function editSingleWallet(query: IWalletItem){
-  return useApi('/wallet/edit',query)
+  return useApi('/wallet/edit', query)
 }
 
 export function deleteSingleWallet(id: string){

@@ -1,11 +1,29 @@
 <script lang="ts" setup>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import dayjs from "dayjs";
 
-const props = defineProps<{
+interface Props {
   title: string,
-  walletItem: IWalletItem
-}>()
+  walletItem?: {
+    type: string,
+    category: string,
+    date:string,
+    item: string,
+    amount: number | null
+  } 
+}
+const props = withDefaults(defineProps<Props>(),{
+  walletItem: () => { 
+    return {
+      type: "Expense",
+      category: "Food",
+      date: dayjs().format(DateEnum.dateFormat),
+      item:"",
+      amount: null
+    }
+  }
+})   
 const walletTypeOption = ToArray(WalletTypeEnum)
 const expenseTypeOption = ref(expenseCategory)
 const incomeTypeOption = ref(incomeCategory)
@@ -103,7 +121,7 @@ function cancel(){
       <div class="my-3">
         <label for="" class="inline-block w-20">Amount :</label>
         <input
-          v-model="localWalletItem.amount"
+          v-model.number="localWalletItem.amount"
           type="text"
           class="input w-60"
         >

@@ -2,7 +2,7 @@
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import DefaultDialog from '~/components/DefaultDialog.vue';
-import EditExpenseDialog from '~/components/EditExpenseDialog.vue';
+import WalletDialog from '~/components/WalletDialog.vue';
 
 const { $dialog, $toast } = useNuxtApp();
 const walletTypeOption = ref(WalletType)
@@ -67,11 +67,27 @@ function amountHTML(item: IWalletItem){
   : `<span class="mx-2 text-blue-400">+${item.amount.toLocaleString()}</span>`
 }
 
+// Add Dialog
+function openAddDialog() {
+  $dialog
+    .open( 
+      WalletDialog, {
+        title: 'Add',
+      }
+    )
+    .onOk(async (data)=>{
+      console.log(data)
+      await addSingleWallet(data);
+      walletList.value = await getWallet(query.value)
+      $toast.success('Add successfully!')
+    })
+}
+
 // Edit Dialog
 function openEditDialog(walletItem: IWalletItem) {
   $dialog
     .open( 
-      EditExpenseDialog,{
+      WalletDialog, {
         title: 'Edit',
         walletItem: {...walletItem},
       }
@@ -102,68 +118,86 @@ function openDeleteDialog(data: IWalletItem) {
 </script>
 
 <template>
-  <div class="text-lg">
-    <div class="mb-2">
-      <span class="inline-block w-24">Type : </span>
-      <select
-        v-model.number="query.type"
-        class="text-black w-56 p-1 rounded"
-      >
-        <option
-          v-for="walletType in walletTypeOption"
-          :key="walletType"
-          :value="walletType"
-        >
-          {{ walletType }}
-        </option>
-      </select>
+  <div class="flex gap-4 border-b border-gray-500">
+    <div>
+        <div class="text-lg">
+        <div class="mb-2">
+          <span class="inline-block w-24">Type : </span>
+          <select
+            v-model.number="query.type"
+            class="text-black w-56 p-1 rounded"
+          >
+            <option
+              v-for="walletType in walletTypeOption"
+              :key="walletType"
+              :value="walletType"
+            >
+              {{ walletType }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <span class="inline-block w-24">Category : </span>
+          <div 
+            class="inline mr-2" 
+            v-for="category in categoryOption"
+            :key="category">
+            <input 
+              class="mr-1"
+              type="checkbox" 
+              :value=category
+              :id="category"
+              checked
+              v-model="query.category"
+            > 
+            <label :for="category">{{category}}</label>
+          </div>
+        </div>
+        <div class="mb-2">
+          <span class="inline-block w-24">Date : </span>
+          <div class="inline-block w-80 p-1 mr-2">
+            <vue-date-picker
+              auto-apply
+              format="yyyy-MM-dd"
+              v-model="query.date"
+              :enable-time-picker="false"
+              range 
+            />
+          </div>
+          <button 
+            v-for="dateRange in dateRangeTag"
+            :key="dateRange"
+            @click="selectDateRange(dateRange)"
+            class="btn border border-gray-300 text-gray-300 text-sm mr-2"
+          >
+            {{ dateRange }}
+          </button>
+        </div>
+        </div>
+        <div>
+            <button 
+              @click="fetchWallet"
+              class="btn-primary my-4"
+            >
+              Search
+            </button>
+        </div>
     </div>
-    <div class="mb-2">
-      <span class="inline-block w-24">Category : </span>
-      <div 
-        class="inline mr-2" 
-        v-for="category in categoryOption"
-        :key="category">
-        <input 
-          class="mr-1"
-          type="checkbox" 
-          :value=category
-          :id="category"
-          checked
-          v-model="query.category"
-        > 
-        <label :for="category">{{category}}</label>
-      </div>
+    <div>
+    <button
+      class="block w-52 btn-primary my-2 text-left"
+      @click="openAddDialog"
+    >
+      <Icon name="material-symbols:add-circle-outline" class="inline-block align-middle rounded text-3xl mr-2" />
+      Add wallet
+    </button>
+    <button 
+      class="block w-52 btn-primary my-2 text-left"
+    >
+      <Icon name="material-symbols:delete" class="inline-block align-middle rounded text-3xl mr-2" />
+      Multiple delete
+    </button>
     </div>
-    <div class="mb-2">
-      <span class="inline-block w-24">Date : </span>
-      <div class="inline-block w-80 p-1 mr-2">
-        <vue-date-picker
-          auto-apply
-          format="yyyy-MM-dd"
-          v-model="query.date"
-          :enable-time-picker="false"
-          range 
-        />
-      </div>
-      <button 
-        v-for="dateRange in dateRangeTag"
-        :key="dateRange"
-        @click="selectDateRange(dateRange)"
-        class="btn border border-gray-300 text-gray-300 text-sm mr-2"
-      >
-        {{ dateRange }}
-      </button>
-    </div>
-  </div>
-
-  <div class="border-b border-gray-500">
-      <button 
-        @click="fetchWallet"
-        class="btn bg-secondary-100 text-white my-4"
-      >
-        Search
-      </button>
   </div>
   <br>
   <template v-if="loading">
@@ -182,15 +216,14 @@ function openDeleteDialog(data: IWalletItem) {
         <Icon name="ic:sharp-plus" class="inline-block align-middle bg-secondary-100 rounded text-2xl mr-2" />
         <span>{{ _id }} ${{total.toLocaleString()}}</span>
       </div>
-      
         <ul class="pl-8 text-md">
-        <li 
-          v-for="item in list"
-          :key="item._id"
-          class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100"
-        >
-          <div>{{itemDateFormat(item.date)}} {{item.item}}</div>
-          <div>
+          <li 
+            v-for="item in list"
+            :key="item._id"
+            class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100"
+          >
+            <div>{{itemDateFormat(item.date)}} {{item.item}}</div>
+            <div>
             <span v-html="amountHTML(item)"></span>
             <Icon
               name="material-symbols:edit"
@@ -202,8 +235,8 @@ function openDeleteDialog(data: IWalletItem) {
               class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
               @click="openDeleteDialog(item)"
             />
-          </div>
-        </li> 
+            </div>
+          </li>
         </ul>
     </li>
   </ul>
