@@ -21,5 +21,5 @@ interface categories{
 interface getWalletRes{
   _id: string, 
   total: number,
-  list: IWalletItem[]
+  list: IWalletItem[] 
 }

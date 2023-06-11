@@ -35,6 +35,10 @@ export function editSingleWallet(query: IWalletItem){
   return useApi('/wallet/edit', query)
 }
 
+export function editSingleWalletCategory(query: Pick<IWalletItem,'_id' | 'category'>[]){
+  return useApi('/wallet/editCategory', query)
+}
+
 export function deleteSingleWallet(id: string){
   return useApi('/wallet/deleteOne', { id })
 }

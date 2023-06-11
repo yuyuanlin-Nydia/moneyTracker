@@ -2,6 +2,7 @@ const auth = require('../jwt-auth-middleware.js')
 const express = require('express')
 const Wallet = require('../models/wallet.js')
 const walletRouter = express.Router()
+const { mergeArrays } = require("../helper.js")
 
 walletRouter.post('/getAll', async (req, res) => {
   try {
@@ -16,7 +17,8 @@ walletRouter.post('/getAll', async (req, res) => {
       { $group: { _id: "$category", total: { $sum: "$amount" }, list: { $push: "$$ROOT" }} },
       { $sort : { total: -1 } }
     ])
-    res.status(200).send(result)
+    const resultWithAllCategory = mergeArrays(category, result)
+    res.status(200).send(resultWithAllCategory)
   } catch (err) {
     console.log(err)
   }
@@ -34,8 +36,18 @@ walletRouter.post('/addOne', async (req, res) => {
 
 walletRouter.post('/edit', async (req, res) => {
   try {
-    const result = await Wallet.findByIdAndUpdate(req.body._id, req.body)
-    console.log(result)
+    await Wallet.findByIdAndUpdate(req.body._id, req.body)
+    res.status(200).send()  
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+walletRouter.post('/editCategory', async (req, res) => {
+  try {
+    req.body.forEach(async (item)=>{
+      await Wallet.findByIdAndUpdate(item._id, {category: item.category})
+    })
     res.status(200).send()  
   } catch (err) {
     console.log(err)
