@@ -17,6 +17,7 @@ const dateRangeTag = ['This month', 'This week', 'Today' ]
 const walletList = ref<getWalletRes[]>([]);
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
+const sideDownCategory = ref<string[]>([])
 
 const categoryOption = computed(()=>{
   return (query.value.type === "Expense"
@@ -60,6 +61,15 @@ async function dragEnd(){
   await fetchWallet()
 
   $toast.success('Edit category successfully!')
+}
+
+function toggleSlide(_id: string){
+  if(sideDownCategory.value.includes(_id)){
+    const startIndex = sideDownCategory.value.indexOf(_id)
+    sideDownCategory.value.splice(startIndex, 1)
+  }else{
+    sideDownCategory.value.push(_id)
+  }
 }
 
 function selectDateRange(rangeTag: string ){
@@ -235,7 +245,11 @@ function openDeleteDialog(data: IWalletItem) {
         class="bg-primary-100 rounded-lg p-3 mb-3"
       >
         <div class="text-xl font-bold mb-2">
-          <Icon name="ic:sharp-plus" class="inline-block align-middle bg-secondary-100 rounded text-2xl mr-2" />
+          <Icon 
+            @click="toggleSlide(_id)"
+            :name="sideDownCategory.includes(_id)? 'ic:sharp-minus': 'ic:sharp-plus'" 
+            :class="['inline-block', 'align-middle', 'rounded', 'text-2xl', 'mr-2', list.length? 'bg-secondary-100 cursor-pointer': 'bg-gray-300']" 
+            />
           <span>{{ _id }} ${{total.toLocaleString()}}</span>
         </div>
         <draggable
@@ -250,32 +264,33 @@ function openDeleteDialog(data: IWalletItem) {
           tag="ul"
           group="wallet"
           handle=".moveIcon"
-        >
-            <template #item="{ element }">
-          <li 
-            class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100">
-            <div>
+          >
+          <template #item="{ element }">
+            <li 
+              v-show="sideDownCategory.includes(_id)"
+              class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100"
+            >
+              <div>
+                  <Icon
+                    name="material-symbols:drag-indicator" 
+                    class="moveIcon align-text-top cursor-move text-white rounded-full p-1 text-xl" 
+                  />          
+                  {{itemDateFormat(element.date)}} {{element.item}}
+              </div>
+              <div>
+                <div class="inline-block" v-html="amountHTML(element)"></div>
                 <Icon
-                  name="material-symbols:drag-indicator" 
-                  class="moveIcon align-text-top cursor-pointer text-white rounded-full p-1 text-xl" 
-                />          
-                {{itemDateFormat(element.date)}} {{element.item}}
-            </div>
-            
-            <div>
-              <div class="inline-block" v-html="amountHTML(element)"></div>
-              <Icon
-                name="material-symbols:edit"
-                class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl mr-1.5"
-                @click="openEditDialog(element)"
-              />
-              <Icon
-                name="material-symbols:delete"
-                class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
-                @click="openDeleteDialog(element)"
-              />
-            </div>
-          </li>
+                  name="material-symbols:edit"
+                  class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl mr-1.5"
+                  @click="openEditDialog(element)"
+                />
+                <Icon
+                  name="material-symbols:delete"
+                  class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
+                  @click="openDeleteDialog(element)"
+                />
+              </div>
+            </li>
           </template>
         </draggable>
       </li>
