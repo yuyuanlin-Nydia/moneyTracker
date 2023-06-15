@@ -23,3 +23,13 @@ interface getWalletRes{
   total: number,
   list: IWalletItem[] 
 }
+
+interface getLatestWalletRes{
+  expense: IWalletItem[], 
+  income: IWalletItem[]
+}
+
+interface getWalletTotalAmountResObj {
+  type: string,
+  total: number
+}

@@ -4,6 +4,47 @@ const Wallet = require('../models/wallet.js')
 const walletRouter = express.Router()
 const { mergeArrays } = require("../helper.js")
 
+// INDEX PAGE
+walletRouter.post('/getLatestWallet', async (req, res) => {
+  try {
+    const income = await Wallet.find({type: "Income"}).sort({date: -1}).limit(3)
+    const expense = await Wallet.find({type: "Expense"}).sort({date: -1}).limit(3)
+    res.status(200).send({ income, expense })  
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+walletRouter.post('/getWalletTotalAmount', async (req, res) => {
+  try {
+    const type = ["Income", "Expense"]
+    const totalByTypeList = await Wallet.aggregate([
+      { $group: { _id: "$type", total: { $sum: "$amount" }} },
+      { $project: {type: "$_id", total: 1, "_id": 0 }}
+    ])
+    // const totalExpense = await Wallet.find({type: "Expense"}).sort({date: -1}).limit(3)
+
+    var mergedList = function(arr1 = [], arr2 = []){
+      let res = [];
+      res = arr1.map(_id => {
+        const index = arr2.findIndex(el => el["type"] == _id);
+        const r = index !== -1 ? arr2[index] : { type: _id, total:0 };
+        return r;
+      });
+      return res;
+    };
+
+    const result = type.length === totalByTypeList.length
+      ? totalByTypeList
+      : mergedList(type, totalByTypeList)
+    
+    res.status(200).send(result)  
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+// WALLET PAGE
 walletRouter.post('/getAll', async (req, res) => {
   try {
     const {type, category, date } = req.body
@@ -56,7 +97,6 @@ walletRouter.post('/editCategory', async (req, res) => {
 
 walletRouter.post('/deleteOne', async (req, res) => {
   try {
-    console.log(req.body.id)
     await Wallet.findByIdAndDelete(req.body.id)
     res.status(200).send()  
   } catch (err) {

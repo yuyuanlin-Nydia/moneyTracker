@@ -5,12 +5,13 @@ import DefaultDialog from '~/components/DefaultDialog.vue';
 import WalletDialog from '~/components/WalletDialog.vue';
 
 const { $dialog, $toast } = useNuxtApp();
+const route = useRoute();
 const walletTypeOption = ref(WalletType)
 const expenseTypeOption = ref(expenseCategory)
 const incomeTypeOption = ref(incomeCategory)
 const query = ref<IWalletQuery>({
-  type: 'Expense',
-  category: expenseTypeOption.value,
+  type: route.query.type as string || 'Expense',
+  category: [],
   date: []
 })
 const dateRangeTag = ['This month', 'This week', 'Today' ]
@@ -18,14 +19,31 @@ const walletList = ref<getWalletRes[]>([]);
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
 const sideDownCategory = ref<string[]>([])
+const dateRangeTextBtn = ref<string>('')
 
 const categoryOption = computed(()=>{
   return (query.value.type === "Expense"
     ? expenseTypeOption.value
     : incomeTypeOption.value)
 })
+const totalAmount = computed(()=>{
+  let total = 0
+  walletList.value.forEach(item =>{
+    total += item.total
+  })
 
-selectDateRange('This week')
+  return total.toLocaleString()
+})
+
+watch(() => query.value.type, (newValue) =>{
+    query.value.category = newValue==='Expense'
+      ? expenseTypeOption.value
+      : incomeTypeOption.value
+  }, 
+  { immediate: true } 
+)
+
+selectDateRange('This month')
 await fetchWallet()
 
 async function fetchWallet(){
@@ -73,6 +91,7 @@ function toggleSlide(_id: string){
 }
 
 function selectDateRange(rangeTag: string ){
+  dateRangeTextBtn.value = rangeTag
   let startDate = dayjsTz().startOf('month').startOf('day'), 
       endDate = dayjsTz().endOf('month').startOf('day')
   switch (rangeTag) {
@@ -193,13 +212,17 @@ function openDeleteDialog(data: IWalletItem) {
                 v-model="query.date"
                 :enable-time-picker="false"
                 range 
+                @update:model-value="dateRangeTextBtn=''"
               />
             </div>
             <button 
               v-for="dateRange in dateRangeTag"
               :key="dateRange"
               @click="selectDateRange(dateRange)"
-              class="btn border border-gray-300 text-gray-300 text-sm mr-2"
+              :class="['btn', 'border', 'text-sm mr-2', 
+                       dateRangeTextBtn===dateRange
+                       ? 'border-gray-100 text-gray-100'
+                       : 'border-gray-400 text-gray-400']"
             >
               {{ dateRange }}
             </button>
@@ -238,6 +261,7 @@ function openDeleteDialog(data: IWalletItem) {
     <Loading :show=loading />
   </div>
   <div v-else-if="walletList.length">
+    <div class="text-gray-100 text-lg font-bold">TOTAL: NT${{ totalAmount }}</div>
     <ul>
       <li 
         v-for="{list, _id, total} in walletList"

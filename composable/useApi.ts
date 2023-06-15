@@ -22,7 +22,16 @@ const useApi = function(url: string, body: Record<string, any> = {}): Promise<an
     }
   })
 }
+// Overview page
+export async function getLatestWallet(): Promise<getLatestWalletRes>{
+  return await useApi('/wallet/getLatestWallet')
+}
 
+export async function getWalletTotalAmount(): Promise<getWalletTotalAmountResObj[]>{
+  return await useApi('/wallet/getWalletTotalAmount')
+}
+
+// Wallet page
 export async function getWallet(query: IWalletQuery): Promise<getWalletRes[]>{
   return await useApi('/wallet/getAll', query)
 }

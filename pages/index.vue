@@ -1,11 +1,13 @@
 <script lang="ts" setup>
+const latestWallet: getLatestWalletRes = await getLatestWallet()
+const walletTotalAmount: getWalletTotalAmountResObj[] = await getWalletTotalAmount()
 // definePageMeta({
 //   middleware: ['auth'],
 // })
 </script>
 
 <template>
-  <div class=" w-full flex justify-around flex-col">
+  <div class="w-full flex flex-col">
     <div class="card w-full bg-primary-500">
       <h3 class="text-2xl font-bold">
         Reports
@@ -33,68 +35,30 @@
           <div class="center p-2 bg-info-500 rounded-xl">
             <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-plus" />
             <div>
-              <span class="font-extrabold block text-lg">$540</span>
-              <span class="details">Total Income / period</span>
+              <span class="font-extrabold block text-lg">${{walletTotalAmount[0].total.toLocaleString()}}</span>
+              <span class="details">Total Income / month</span>
             </div>
           </div>
           <div class="center p-2 bg-info-500 rounded-xl mt-3">
             <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-minus" />
             <div>
-              <span class="font-extrabold block text-lg">$540</span>
-              <span class="details">Total Expense / period</span>
+              <span class="font-extrabold block text-lg">${{walletTotalAmount[1].total.toLocaleString()}}</span>
+              <span class="details">Total Expense / month</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Income and expense -->
+    <!-- Income and Expense -->
     <div class="center w-full mt-3 grid grid-cols-2 gap-5">
-      <div class="card bg-primary-500 w-full">
-        <div class="flex items-center justify-between mb-1">
-          <h3 class="text-2xl font-bold">
-            Income
-          </h3>
-          <button class="btn text-gray-400 hover:bg-secondary-100 hover:text-white">
-            View All
-          </button>
-        </div>
-
-        <ul>
-          <li class="flex justify-between items-center border-b border-secondary-100 py-1">
-            <div>
-              <span class="text-sm block font-bold">KKBOX</span>
-              <span class="details leading-3">Category</span>
-            </div>
-            <span class="font-bold">$200</span>
-          </li>
-          <li class="flex justify-between items-center border-b border-secondary-100 py-1">
-            <div>
-              <span class="text-sm block font-bold ">KKBOX</span>
-              <span class="details leading-3">Category</span>
-            </div>
-            <span class="font-bold">$200</span>
-          </li>
-          <li class="flex justify-between items-center pt-3">
-            <div>
-              <span class="text-sm block font-bold">KKBOX</span>
-              <span class="details leading-3">Category</span>
-            </div>
-            <span class="font-bold">$200</span>
-          </li>
-        </ul>
-      </div>
-      <div class="card bg-primary-500 w-full">
-        <h3 class="text-2xl font-bold">
-          Expense
-        </h3>
-      </div>
-      <div class="card bg-primary-500 w-full">
-        <h3 class="text-2xl font-bold">
-          Budget
-        </h3>
-      </div>
+      <OverviewLatestWalletCard 
+        :title="'Income'"
+        :list="latestWallet.income"
+      />
+      <OverviewLatestWalletCard 
+        :title="'Expense'"
+        :list="latestWallet.expense"
+      />
     </div>
   </div>
 </template>
-
-<style scoped></style>
