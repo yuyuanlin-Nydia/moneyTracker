@@ -22,7 +22,6 @@ walletRouter.post('/getWalletTotalAmount', async (req, res) => {
       { $group: { _id: "$type", total: { $sum: "$amount" }} },
       { $project: {type: "$_id", total: 1, "_id": 0 }}
     ])
-    // const totalExpense = await Wallet.find({type: "Expense"}).sort({date: -1}).limit(3)
 
     var mergedList = function(arr1 = [], arr2 = []){
       let res = [];
@@ -39,6 +38,31 @@ walletRouter.post('/getWalletTotalAmount', async (req, res) => {
       : mergedList(type, totalByTypeList)
     
     res.status(200).send(result)  
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+walletRouter.post('/getWalletAnalysis', async (req, res) => {
+  try {
+    const totalByCategoryList = await Wallet.aggregate([
+      { $match: { type: req.body.type} },
+      { $group: { _id: "$category", total: { $sum: "$amount" }} },
+      { $sort: { _id: 1 } },
+      {
+        $group: {
+          _id: null,
+          data: {
+            $push: {
+              category: "$_id",
+              total: "$total"
+            }
+          }
+        }
+      },
+      { $project: {category: "$data.category",total: "$data.total", _id: 0 }},
+    ])
+    res.status(200).send(totalByCategoryList[0] || null)  
   } catch (err) {
     console.log(err)
   }

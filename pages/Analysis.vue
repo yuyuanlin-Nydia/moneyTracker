@@ -1,3 +1,3 @@
 <template>
-  Budget
+  Analysis 
 </template>

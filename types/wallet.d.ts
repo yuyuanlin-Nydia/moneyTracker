@@ -33,3 +33,8 @@ interface getWalletTotalAmountResObj {
   type: string,
   total: number
 }
+
+interface getWalletAnalysisRes {
+  category: string[],
+  total: number[]
+}

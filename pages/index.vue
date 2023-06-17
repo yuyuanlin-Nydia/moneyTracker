@@ -1,64 +1,120 @@
 <script lang="ts" setup>
 const latestWallet: getLatestWalletRes = await getLatestWallet()
-const walletTotalAmount: getWalletTotalAmountResObj[] = await getWalletTotalAmount()
+const type= ref<string>("Expense")
+const walletTotalAmount = ref<getWalletTotalAmountResObj[]>([])
+const chartData = ref<getWalletAnalysisRes | null>(null)
+const donutChartData = computed(() => {
+  return {
+    labels: chartData.value?.category,
+    datasets: [
+      {
+        label: 'Total',
+        backgroundColor: [
+          '#FF952D',
+          '#A338FE',
+          '#FE27A4',
+        ],
+        data: chartData.value?.total
+      }
+    ]
+  }
+})
+
+watch(type, async (newValue)=>{
+  console.log(newValue)
+  chartData.value = await getWalletAnalysis(newValue)
+})
+
+chartData.value = await getWalletAnalysis(type.value)
+walletTotalAmount.value = await getWalletTotalAmount()
+
 // definePageMeta({
 //   middleware: ['auth'],
 // })
 </script>
 
 <template>
-  <div class="w-full flex flex-col">
-    <div class="card w-full bg-primary-500">
-      <h3 class="text-2xl font-bold">
-        Reports
-      </h3>
-      <!-- Report -->
-      <div class="grid grid-cols-5">
-        <div class="col-span-3">
-          chart
-        </div>
-        <div class="flex flex-col justify-end col-span-2">
-          <!-- <ul>
-            <li class="uppercase">
-              FOOD: $555
-            </li>
-            <li class="uppercase">
-              GROCERY: $555
-            </li>
-            <li class="uppercase">
-              ENTERTAINMENT: $555
-            </li>
-          </ul> -->
-          <button class="btn-primary justify-self-end w-36 my-2 ">
-            More Details
-          </button>
-          <div class="center p-2 bg-info-500 rounded-xl">
-            <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-plus" />
-            <div>
-              <span class="font-extrabold block text-lg">${{walletTotalAmount[0].total.toLocaleString()}}</span>
-              <span class="details">Total Income / month</span>
-            </div>
+  <div class="w-full flex flex-row gap-6">
+    <div class="flex flex-col basis-3/4">
+      <div class="card w-full bg-primary-500">
+        <!-- Analysis -->
+        <div class="flex justify-between items-center">
+          <div class="text-2xl font-bold">
+            Analysis 
           </div>
-          <div class="center p-2 bg-info-500 rounded-xl mt-3">
-            <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-minus" />
-            <div>
-              <span class="font-extrabold block text-lg">${{walletTotalAmount[1].total.toLocaleString()}}</span>
-              <span class="details">Total Expense / month</span>
+          <NuxtLink 
+            to="/analysis"
+            class="btn-primary justify-self-end w-36 my-2"
+          >
+            More Analysis 
+          </NuxtLink>
+        </div>
+        <!-- Report -->
+        <div class="grid grid-cols-5">
+          <!-- Chart -->
+         <div class="col-span-3 flex justify-center">
+           <div class="sm:w-[100%] md:w-[70%]" v-if="chartData">
+              <DoughnutChart
+                :title="'Doughnut Chart For This Month'"
+                :chartData="donutChartData"  
+              />
+            </div>
+            <p 
+              v-else
+              class="text-xl text-gray-300 center w-full"
+            >
+              No data to be  analyzed now!
+            </p>
+         </div>
+          <div class="flex flex-col col-span-2">
+            <div class="mb-4">
+               <BaseSelect 
+                 :list="WalletType"
+                 v-model="type"
+                 :customClass="['w-full']"
+               />
+            </div>
+            <div class="center p-2 bg-info-500 rounded-xl">
+              <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-plus" />
+              <div>
+                <span class="font-extrabold block text-lg">${{walletTotalAmount[0].total.toLocaleString()}}</span>
+                <span class="details">Total Income / month</span>
+              </div>
+            </div>
+            <div class="center p-2 bg-info-500 rounded-xl mt-3">
+              <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-minus" />
+              <div>
+                <span class="font-extrabold block text-lg">${{walletTotalAmount[1].total.toLocaleString()}}</span>
+                <span class="details">Total Expense / month</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <!-- Income and Expense -->
+      <div class="center w-full mt-3 grid grid-cols-2 gap-5">
+        <OverviewLatestWalletCard 
+          :title="'Income'"
+          :list="latestWallet.income"
+        />
+        <OverviewLatestWalletCard 
+          :title="'Expense'"
+          :list="latestWallet.expense"
+        />
+      </div>
     </div>
-    <!-- Income and Expense -->
-    <div class="center w-full mt-3 grid grid-cols-2 gap-5">
-      <OverviewLatestWalletCard 
-        :title="'Income'"
-        :list="latestWallet.income"
-      />
-      <OverviewLatestWalletCard 
-        :title="'Expense'"
-        :list="latestWallet.expense"
-      />
+    <div class="flex-col-8 basis-1/4 bg-primary-500 card">
+      <div class="fixed animate-bounce hover:animate-none top-[40%] h-40 w-[18%]" >
+        <div class="relative bg-primary-700 rounded-md p-4 flex justify-end flex-col h-48">
+            <img src="/upgrade.png"
+              class="w-[65%] block absolute left-[50%] translate-x-[-50%] top-[-50%]" 
+              alt="upgrade">
+          <p class="text-gray-300 text-center mb-3">Unlock more features using <span class="font-bold text-lg">Pro</span></p>
+          <NuxtLink to="/upgrade">
+            <button class="btn-primary w-full">Upgrade</button>
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </div>
 </template>

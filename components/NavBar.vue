@@ -18,9 +18,9 @@
         <Icon class="mr-2 text-4xl md:text-xl" name="material-symbols:account-balance-wallet" />
       </div>
     </NuxtLink>
-    <NuxtLink v-slot="{ isActive }" to="/budget" title="Budget">
+    <NuxtLink v-slot="{ isActive }" to="/analysis" title="Analysis">
       <div :class="['mt-5', isActive? 'text-secondary-100':'hover:text-primary-200']">
-        <span class="pr-1 hidden md:inline">Budget</span>
+        <span class="pr-1 hidden md:inline">Analysis</span>
         <Icon class="mr-2 text-4xl md:text-xl" name="material-symbols:list-alt-rounded" />
       </div>
     </NuxtLink>

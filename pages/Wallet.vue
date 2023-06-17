@@ -168,23 +168,15 @@ function openDeleteDialog(data: IWalletItem) {
 </script>
 
 <template>
-  <div class="flex gap-4 border-b border-gray-500">
-    <div>
+  <div class="flex flex-row gap-4 border-b border-gray-500">
+    <div class="basis-3/4">
       <div class="text-lg">
         <div class="mb-2">
-            <span class="inline-block w-24">Type : </span>
-            <select
-              v-model.number="query.type"
-              class="text-black w-56 p-1 rounded"
-            >
-              <option
-                v-for="walletType in walletTypeOption"
-                :key="walletType"
-                :value="walletType"
-              >
-                {{ walletType }}
-              </option>
-            </select>
+          <span class="inline-block w-24">Type : </span>
+          <BaseSelect 
+            :list="walletTypeOption"
+            v-model="query.type"
+          />
         </div>
         <div class="mb-2">
             <span class="inline-block w-24">Category : </span>
@@ -204,7 +196,7 @@ function openDeleteDialog(data: IWalletItem) {
             </div>
         </div>
         <div class="mb-2">
-            <span class="inline-block w-24">Date : </span>
+            <span class="inline-block w-24 align-top">Date : </span>
             <div class="inline-block w-80 p-1 mr-2">
               <vue-date-picker
                 auto-apply
@@ -214,18 +206,20 @@ function openDeleteDialog(data: IWalletItem) {
                 range 
                 @update:model-value="dateRangeTextBtn=''"
               />
+             <div class="mt-4">
+                <button 
+                  v-for="dateRange in dateRangeTag"
+                  :key="dateRange"
+                  @click="selectDateRange(dateRange)"
+                  :class="['btn', 'border', 'text-sm mr-2', 
+                           dateRangeTextBtn===dateRange
+                           ? 'border-gray-100 text-gray-100'
+                           : 'border-gray-400 text-gray-400']"
+                >
+                  {{ dateRange }}
+                </button>
+             </div>
             </div>
-            <button 
-              v-for="dateRange in dateRangeTag"
-              :key="dateRange"
-              @click="selectDateRange(dateRange)"
-              :class="['btn', 'border', 'text-sm mr-2', 
-                       dateRangeTextBtn===dateRange
-                       ? 'border-gray-100 text-gray-100'
-                       : 'border-gray-400 text-gray-400']"
-            >
-              {{ dateRange }}
-            </button>
         </div>
       </div>
       <div>
@@ -237,7 +231,7 @@ function openDeleteDialog(data: IWalletItem) {
         </button>
       </div>
     </div>
-    <div>
+    <div class="basis-1/4">
       <button
         class="block w-52 btn-primary my-3 text-left"
         @click="openAddDialog"

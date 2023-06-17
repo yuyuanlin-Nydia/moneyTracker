@@ -31,6 +31,10 @@ export async function getWalletTotalAmount(): Promise<getWalletTotalAmountResObj
   return await useApi('/wallet/getWalletTotalAmount')
 }
 
+export async function getWalletAnalysis(type: string): Promise<getWalletAnalysisRes>{
+  return await useApi('/wallet/getWalletAnalysis', {type})
+}
+
 // Wallet page
 export async function getWallet(query: IWalletQuery): Promise<getWalletRes[]>{
   return await useApi('/wallet/getAll', query)
