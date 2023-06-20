@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
 import DefaultDialog from '~/components/DefaultDialog.vue';
 import WalletDialog from '~/components/WalletDialog.vue';
+import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue';
 
 const { $dialog, $toast } = useNuxtApp();
 const route = useRoute();
@@ -14,12 +13,11 @@ const query = ref<IWalletQuery>({
   category: [],
   date: []
 })
-const dateRangeTag = ['This month', 'This week', 'Today' ]
 const walletList = ref<getWalletRes[]>([]);
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
 const sideDownCategory = ref<string[]>([])
-const dateRangeTextBtn = ref<string>('')
+const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(null)
 
 const categoryOption = computed(()=>{
   return (query.value.type === "Expense"
@@ -43,7 +41,7 @@ watch(() => query.value.type, (newValue) =>{
   { immediate: true } 
 )
 
-selectDateRange('This month')
+dateRangeSelector.value?.selectDateRange('This month')
 await fetchWallet()
 
 async function fetchWallet(){
@@ -88,29 +86,6 @@ function toggleSlide(_id: string){
   }else{
     sideDownCategory.value.push(_id)
   }
-}
-
-function selectDateRange(rangeTag: string ){
-  dateRangeTextBtn.value = rangeTag
-  let startDate = dayjsTz().startOf('month').startOf('day'), 
-      endDate = dayjsTz().endOf('month').startOf('day')
-  switch (rangeTag) {
-    case 'This month':
-      startDate = dayjsTz().startOf('month').startOf('day');
-      endDate = dayjsTz().endOf('month').startOf('day');
-      break;
-    case 'This week':
-       startDate = dayjsTz().isoWeekday(1).startOf('day');
-       endDate = dayjsTz().isoWeekday(7).startOf('day');
-       break;
-    case 'Today':
-       startDate = dayjsTz().startOf('day');
-       endDate = dayjsTz().startOf('day');
-       break;
-    default:
-      break;
-  }
-  query.value.date = [startDate, endDate];
 }
 
 function amountHTML(item: IWalletItem){
@@ -198,27 +173,10 @@ function openDeleteDialog(data: IWalletItem) {
         <div class="mb-2">
             <span class="inline-block w-24 align-top">Date : </span>
             <div class="inline-block w-80 p-1 mr-2">
-              <vue-date-picker
-                auto-apply
-                format="yyyy-MM-dd"
+              <BaseDateRangePicker
+                ref="dateRangeSelector"
                 v-model="query.date"
-                :enable-time-picker="false"
-                range 
-                @update:model-value="dateRangeTextBtn=''"
               />
-             <div class="mt-4">
-                <button 
-                  v-for="dateRange in dateRangeTag"
-                  :key="dateRange"
-                  @click="selectDateRange(dateRange)"
-                  :class="['btn', 'border', 'text-sm mr-2', 
-                           dateRangeTextBtn===dateRange
-                           ? 'border-gray-100 text-gray-100'
-                           : 'border-gray-400 text-gray-400']"
-                >
-                  {{ dateRange }}
-                </button>
-             </div>
             </div>
         </div>
       </div>
