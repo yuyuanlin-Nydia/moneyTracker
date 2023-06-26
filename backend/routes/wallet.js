@@ -17,27 +17,82 @@ walletRouter.post('/getLatestWallet', async (req, res) => {
 
 walletRouter.post('/getWalletTotalAmount', async (req, res) => {
   try {
-    const type = ["Income", "Expense"]
+    const date = new Date();
     const totalByTypeList = await Wallet.aggregate([
-      { $group: { _id: "$type", total: { $sum: "$amount" }} },
-      { $project: {type: "$_id", total: 1, "_id": 0 }}
-    ])
-
-    var mergedList = function(arr1 = [], arr2 = []){
-      let res = [];
-      res = arr1.map(_id => {
-        const index = arr2.findIndex(el => el["type"] == _id);
-        const r = index !== -1 ? arr2[index] : { type: _id, total:0 };
-        return r;
-      });
-      return res;
-    };
-
-    const result = type.length === totalByTypeList.length
-      ? totalByTypeList
-      : mergedList(type, totalByTypeList)
+      {
+        $match: {
+          date: {
+            $gte: new Date(date.getFullYear(), date.getMonth(), 1), 
+            $lte: new Date(date.getFullYear(), date.getMonth() + 1, 0) 
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$type",
+          total: { $sum: "$amount" },
+        },
+      },
     
-    res.status(200).send(result)  
+      {
+        $group: {
+          _id: null,
+          stats: { $push: "$$ROOT" },
+        },
+      },
+      {
+        $project: {
+          type: "$_id",
+          total: 1,
+          _id: 0,
+          stats: {
+            $map: {
+              input: ["Income", "Expense"],
+              as: "type",
+              in: {
+                $let: {
+                  vars: {
+                    dateIndex: {
+                      $indexOfArray: [
+                        "$stats._id",
+                        "$$type",
+                      ],
+                    },
+                  },
+                  in: {
+                    $cond: {
+                      if: {
+                        $ne: ["$$dateIndex", -1],
+                      },
+                      then: {
+                        $arrayElemAt: [
+                          "$stats",
+                          "$$dateIndex",
+                        ],
+                      },
+                      else: {
+                        _id: "$$type",
+                        total: 0,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $unwind: "$stats",
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$stats",
+        },
+      },
+    ])
+    
+    res.status(200).send(totalByTypeList)  
   } catch (err) {
     console.log(err)
   }
@@ -45,8 +100,16 @@ walletRouter.post('/getWalletTotalAmount', async (req, res) => {
 
 walletRouter.post('/getWalletAnalysis', async (req, res) => {
   try {
+    const date = new Date();
     const totalByCategoryList = await Wallet.aggregate([
-      { $match: { type: req.body.type} },
+      { $match: { 
+          type: req.body.type,
+          date: { 
+            $gte: new Date(date.getFullYear(), date.getMonth(), 1), 
+            $lte: new Date(date.getFullYear(), date.getMonth() + 1, 0) 
+          }
+        } 
+      },
       { $group: { _id: "$category", total: { $sum: "$amount" }} },
       { $sort: { _id: 1 } },
       {

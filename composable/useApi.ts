@@ -55,3 +55,12 @@ export function editSingleWalletCategory(query: Pick<IWalletItem,'_id' | 'catego
 export function deleteSingleWallet(id: string){
   return useApi('/wallet/deleteOne', { id })
 }
+
+//Analysis Page 
+export function getAnalysisData(query: Pick<IWalletQuery, 'date' | 'type'>): Promise<getAnalysisDataRes>{
+  return useApi('/analysis/getData', query)
+}
+
+export function getWalletRateAndTotal(): Promise<getWalletRateAndTotalRes[]>{
+  return useApi('/analysis/getWalletRateAndTotal')
+}

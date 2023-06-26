@@ -6,6 +6,7 @@ const cors = require('cors')
 const { connectMongoDB } = require('./db')
 const { userRouter } = require('./routes/user')
 const { walletRouter } = require('./routes/wallet')
+const { analysisRouter } = require('./routes/analysis')
 const app = express()
 
 dotenv.config()
@@ -24,6 +25,7 @@ app
   .use(express.json())
   // .use('/user', userRouter)
   .use('/wallet', walletRouter)
+  .use('/analysis', analysisRouter)
 
 const __dirname1 = path.resolve()
 

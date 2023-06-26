@@ -38,3 +38,26 @@ interface getWalletAnalysisRes {
   category: string[],
   total: number[]
 }
+
+interface getWalletRateAndTotalRes{
+  type: string,
+  total: number,
+  MoM: string,
+  YoY: string
+}
+
+type IDoughnutData = {
+  category: string[],
+  total: number[]
+}
+
+type ILineDataObj = {
+  label: string[],
+  total: number[]
+}
+
+interface getAnalysisDataRes{
+  doughnutData: IDoughnutData,
+  lineData: ILineDataObj,
+  top5: IWalletItem[]
+}
