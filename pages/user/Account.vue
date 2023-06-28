@@ -1,3 +1,3 @@
 <template>
-  Account Page
+  Account
 </template>
