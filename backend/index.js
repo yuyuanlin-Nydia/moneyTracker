@@ -8,13 +8,16 @@ const { userRouter } = require('./routes/user')
 const { walletRouter } = require('./routes/wallet')
 const { analysisRouter } = require('./routes/analysis')
 const app = express()
+const auth = require('./jwt-auth-middleware.js')
+const cookieParser = require("cookie-parser");
 
 dotenv.config()
 connectMongoDB()
 const httpServer = createServer(app)
 
 const corsOptions = {
-  origin: '*',
+  origin: 'http://localhost:3000',
+  credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204
@@ -23,7 +26,9 @@ const port = process.env.BACKEND_PORT || 5000
 app
   .use(cors(corsOptions))
   .use(express.json())
-  // .use('/user', userRouter)
+  .use(cookieParser())
+  .use('/user', userRouter)
+  .use(auth)
   .use('/wallet', walletRouter)
   .use('/analysis', analysisRouter)
 

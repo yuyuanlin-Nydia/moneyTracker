@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const userSchema = new Schema({
-  email: {
+  account: {
     type: String,
-    required: [true, 'Email is required.']
+    required: [true, 'Account is required.']
   },
   password: {
     type: String,
@@ -14,10 +14,6 @@ const userSchema = new Schema({
   userName: {
     type: String,
     required: [true, 'Username is required.']
-  },
-  isOnline: {
-    type: Number,
-    default: 1
   },
   registerDate: {
     type: Date,
@@ -54,11 +50,11 @@ userSchema.methods.generateAuthToken = async function () {
   // 回傳 JWT
   return token
 }
-userSchema.statics.findByCredentials = async (email, password) => {
-  // 根據 email 至資料庫找尋該用戶資料
-  const user = await User.findOne({ email })
+userSchema.statics.findByCredentials = async (account, password) => {
+  // 根據 account 至資料庫找尋該用戶資料
+  const user = await User.findOne({ account })
   // 沒找到該用戶時，丟出錯誤訊息
-  if (!user) { throw new Error('Email not found!') }
+  if (!user) { throw new Error('Account not found!') }
   // 透過 bcrypt 驗證密碼
   const isMatch = await bcrypt.compare(password, user.password)
   // 驗證失敗時，丟出錯誤訊息

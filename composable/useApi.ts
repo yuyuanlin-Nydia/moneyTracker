@@ -6,6 +6,7 @@ const useApi = function(url: string, body: Record<string, any> = {}): Promise<an
     baseURL: apiBaseURL,
     method: "POST",
     body,
+    credentials: 'include',
     watch: false,
     onResponseError({ request, response, options }) {
       // 處理請求回應發生的錯誤
@@ -22,6 +23,15 @@ const useApi = function(url: string, body: Record<string, any> = {}): Promise<an
     }
   })
 }
+// Login & Logout
+export async function getValidateToken(query: loginReq){
+  return await useApi('/user/getValidateToken', query)
+}
+
+export async function logoutUser(query: logoutReq){
+  return await useApi('/user/logout', query)
+}
+
 // Overview page
 export async function getLatestWallet(): Promise<getLatestWalletRes>{
   return await useApi('/wallet/getLatestWallet')

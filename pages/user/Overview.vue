@@ -22,7 +22,7 @@ walletTotalAmount.value = await getWalletTotalAmount()
           <div class="text-2xl font-bold">
             Analysis
           </div>
-          <NuxtLink to="/analysis" class="btn-primary justify-self-end w-36 my-2">
+          <NuxtLink to="/user/analysis" class="btn-primary justify-self-end w-36 my-2">
             More Analysis
           </NuxtLink>
         </div>

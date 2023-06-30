@@ -1,4 +1,3 @@
-const auth = require("../jwt-auth-middleware.js");
 const express = require("express");
 const Wallet = require("../models/wallet.js");
 const analysisRouter = express.Router();

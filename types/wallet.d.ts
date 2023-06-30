@@ -61,3 +61,12 @@ interface getAnalysisDataRes{
   lineData: ILineDataObj,
   top5: IWalletItem[]
 }
+
+interface loginReq{
+  account: string,
+  password: string
+}
+
+interface logoutReq{
+  token: string
+}
