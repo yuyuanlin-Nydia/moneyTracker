@@ -4,13 +4,7 @@ const user = useUser();
 
 <template>
   <nav
-    class="sticky top-0 h-screen flex flex-col text-lg col-span-1  text-right text-primary-100 border-r-2 border-primary-400 px-4">
-    <NuxtLink to="/" class=" font-bold text-white py-6 pr-2">
-      <Icon name="solar:chat-round-money-bold" class="text-4xl rounded bg-primary-200 md:text-xl" />
-      <span class="hidden md:inline">
-        MoneyTracker
-      </span>
-    </NuxtLink>
+    class="sticky top-0 min-h-[calc(100vh-4rem)] flex flex-col text-lg col-span-1  text-right text-primary-100 border-r-2 border-primary-400 px-4">
     <NuxtLink v-slot="{ isActive }" to="/user/overview" title="Overview">
       <div :class="['mt-5', isActive ? 'text-secondary-100' : 'hover:text-primary-200']">
         <span class="pr-1 hidden md:inline">Overview</span>
@@ -35,14 +29,7 @@ const user = useUser();
         <Icon class="mr-2 text-4xl md:text-xl" name="material-symbols:account-box" />
       </div>
     </NuxtLink>
-    <!-- <NuxtLink v-if="!user.isLoggedIn" class="pt-1" to="/login" title="Login">
-      <div :class="['mt-5', isActive? 'text-secondary-100':'hover:text-primary-200']">
-         <span class="pr-1">Login</span>
-          <Icon name="clarity:login-solid" />
-      </div>
-    </NuxtLink> -->
-    <a href="#" title="Logout"
-      class="mr-2 absolute bottom-8 right-0 border-r-4 border-transparent hover:text-primary-200 " @click="user.logout()">
+    <a href="#" title="Logout" class="mt-5 hover:text-primary-200 " @click="user.logout()">
       <span class="pr-1 hidden md:inline">Logout</span>
       <Icon class="mr-2 text-4xl md:text-xl" name="clarity:logout-solid" />
     </a>

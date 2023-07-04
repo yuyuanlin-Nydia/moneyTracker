@@ -9,6 +9,8 @@ export const useUser = defineStore('user', {
     async login(query: loginReq) {
       const { success, message } = await getValidateToken(query)
       if(success){
+        const token = useCookie('token'); 
+        token.value = message.token
         setToken(message.token)
         this.isLoggedIn = true;
         useRouter().push('/user/overview')
@@ -17,6 +19,8 @@ export const useUser = defineStore('user', {
     async logout(){
       const { success } = await logoutUser({ token: getToken()! })
       if(success){
+        const token = useCookie('token'); 
+        token.value = ''
         clearToken();
         this.isLoggedIn = false;
         useRouter().push('/')

@@ -36,7 +36,7 @@ definePageMeta({
       <h1 class="text-secondary-200 font-bold text-center text-6xl">
         Money Tracker
       </h1>
-      <pre class="text-gray-100 mt-5 text-center">Your best choice for money-saving and budget.</pre>
+      <p class="text-gray-100 mt-5 text-center">Your best choice for money-saving, record and analysis.</p>
     </div>
   </div>
 </template>

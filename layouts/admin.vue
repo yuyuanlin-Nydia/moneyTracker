@@ -11,8 +11,8 @@ watch(() => route.name,
 </script>
 
 <template>
-  <div class="grid min-h-screen grid-cols-8 h-full bg-primary-600 text-white">
-    <NavBar />
+  <div class="grid min-h-[calc(100vh-4rem)] h-full grid-cols-8  bg-primary-600 text-white">
+    <UserNavBar />
     <main class="px-8 col-span-7">
       <h5 class=" text-4xl font-bold py-6">
         {{ routeName }}
