@@ -64,7 +64,7 @@ walletTotalAmount.value = await getWalletTotalAmount()
           <p class="text-gray-300 text-center mb-3">Unlock more features using
             <span class="font-bold text-lg">Pro</span>
           </p>
-          <NuxtLink to="/upgrade">
+          <NuxtLink to="/ProductPlan">
             <button class="btn-primary w-full">Upgrade</button>
           </NuxtLink>
         </div>

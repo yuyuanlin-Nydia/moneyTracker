@@ -12,8 +12,8 @@ const { isLoggedIn } = storeToRefs(user)
       </span>
     </NuxtLink>
     <div>
-      <NuxtLink v-slot="{ isActive }" to="/upgrade" title="Upgrade">
-        <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Upgrade</span>
+      <NuxtLink v-slot="{ isActive }" to="/ProductPlan" title="Product Plan">
+        <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Product Plan</span>
       </NuxtLink>
       <NuxtLink v-slot="{ isActive }" class="mx-3" to="/login" title="Login" v-if="!isLoggedIn">
         <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Login</span>
