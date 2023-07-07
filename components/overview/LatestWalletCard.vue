@@ -24,7 +24,10 @@ defineProps<{
             <span class="text-sm block font-bold">{{ item.item }}</span>
             <span class="details leading-3">{{ item.category }}</span>
           </div>
-          <span class="font-bold">${{ item.amount.toLocaleString() }}</span>
+          <div>
+            <span class="font-bold block">${{ item.amount.toLocaleString() }}</span>
+            <span class="details leading-3">{{ dayjsTz(item.date).format('YYYY/MM/DD') }}</span>
+          </div>
         </li>
       </ul>
     </template>

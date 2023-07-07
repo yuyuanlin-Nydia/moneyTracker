@@ -76,10 +76,11 @@ async function dragEnd() {
     })
   }).flat()
 
-  await editSingleWalletCategory(newDragList);
-  await fetchWallet()
-
-  $toast.success('Edit category successfully!')
+  const result = await editSingleWalletCategory(newDragList);
+  if (result.success) {
+    await fetchWallet()
+    $toast.success('Edit category successfully!')
+  }
 }
 
 function toggleSlide(_id: string) {
@@ -101,14 +102,15 @@ function amountHTML(item: IWalletItem) {
 function openAddDialog() {
   $dialog
     .open(
-      WalletDialog, {
-      title: 'Add',
-    }
+      WalletDialog,
+      { title: 'Add' }
     )
     .onOk(async (data) => {
-      await addSingleWallet(data);
-      await fetchWallet()
-      $toast.success('Add successfully!')
+      const result = await addSingleWallet(data);
+      if (result.success) {
+        await fetchWallet()
+        $toast.success('Add successfully!')
+      }
     })
 }
 
@@ -122,9 +124,11 @@ function openEditDialog(walletItem: IWalletItem) {
     }
     )
     .onOk(async (data) => {
-      await editSingleWallet(data);
-      walletList.value = await getWallet(query.value)
-      $toast.success('Edit successfully!')
+      const result = await editSingleWallet(data);
+      if (result.success) {
+        walletList.value = await getWallet(query.value)
+        $toast.success('Edit successfully!')
+      }
     })
 }
 
@@ -138,9 +142,11 @@ function openDeleteDialog(data: IWalletItem) {
       data
     })
     .onOk(async (data) => {
-      await deleteSingleWallet(data._id);
-      await fetchWallet()
-      $toast.success('Delete successfully!')
+      const result = await deleteSingleWallet(data._id);
+      if (result.success) {
+        await fetchWallet()
+        $toast.success('Delete successfully!')
+      }
     })
 }
 </script>

@@ -30,7 +30,7 @@ interface getLatestWalletRes{
 }
 
 interface getWalletTotalAmountResObj {
-  type: string,
+  _id: string,
   total: number
 }
 

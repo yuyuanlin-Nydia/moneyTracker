@@ -42,10 +42,11 @@ walletTotalAmount.value = await getWalletTotalAmount()
               <BaseSelect :list="WalletType" v-model="type" :customClass="['w-full']" />
             </div>
             <div class="center p-2 bg-info-500 rounded-xl mb-3" v-for="item in walletTotalAmount" :key="item.type">
-              <icon class="text-5xl font-extrabold mr-3 text-secondary-100" name="ic:sharp-plus" />
+              <icon class="text-5xl font-extrabold mr-3 text-secondary-100"
+                :name="item._id === 'Income' ? 'ic:sharp-plus' : 'ic:sharp-minus'" />
               <div>
                 <span class="font-extrabold block text-lg">${{ item.total.toLocaleString() }}</span>
-                <span class="details">Total {{ item.type }} / this month</span>
+                <span class="details">Total {{ item._id }} / this month</span>
               </div>
             </div>
           </div>
@@ -53,8 +54,8 @@ walletTotalAmount.value = await getWalletTotalAmount()
       </div>
       <!-- Income and Expense -->
       <div class="center w-full mt-3 grid grid-cols-2 gap-5">
-        <OverviewLatestWalletCard :title="'Income'" :list="latestWallet.income" />
-        <OverviewLatestWalletCard :title="'Expense'" :list="latestWallet.expense" />
+        <OverviewLatestWalletCard :title="'Latest Income'" :list="latestWallet.income" />
+        <OverviewLatestWalletCard :title="'Latest Expense'" :list="latestWallet.expense" />
       </div>
     </div>
     <div class="flex-col-8 basis-1/4 bg-primary-500 card">

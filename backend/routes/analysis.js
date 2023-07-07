@@ -13,6 +13,7 @@ analysisRouter.post("/getWalletRateAndTotal", async (req, res) => {
     const incomeResult = await Wallet.aggregate([
       {
         $match: {
+          _id: { $in: req.user.wallet },
           type: "Income",
           $expr: {
             $in: [
@@ -107,6 +108,7 @@ analysisRouter.post("/getWalletRateAndTotal", async (req, res) => {
     const expenseResult = await Wallet.aggregate([
       {
         $match: {
+          _id: { $in: req.user.wallet },
           type: "Expense",
           $expr: {
             $in: [
@@ -214,6 +216,7 @@ analysisRouter.post('/getData', async (req, res) => {
     const lineData = await Wallet.aggregate([
       {
         $match:{
+          _id: { $in: req.user.wallet },
           type,
           date: { $gte: new Date(date[0]), $lte: new Date(date[1]) }
         } 
@@ -281,6 +284,7 @@ analysisRouter.post('/getData', async (req, res) => {
     ])
     //Top
     const top5 = await Wallet.find({
+      _id: { $in: req.user.wallet },
       type,
       date: { $gte: new Date(date[0]), $lte: new Date(date[1]) }
     }).sort({ amount: -1 })
@@ -289,6 +293,7 @@ analysisRouter.post('/getData', async (req, res) => {
     // Doughnut
     const totalByCategoryList = await Wallet.aggregate([
       { $match: {
+          _id: { $in: req.user.wallet },
           type,
           date: { $gte: new Date(date[0]), $lte: new Date(date[1]) }
         }

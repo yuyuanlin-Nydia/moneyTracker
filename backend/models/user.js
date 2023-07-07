@@ -19,12 +19,18 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  tokens: [{
-    token: {
-      type: String,
-      required: true
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true
+      }
     }
-  }]
+  ],
+  wallet: {
+    type: Array,
+    default: []
+  }
 })
 // 在 userSchema 上建立 Pre middleware 將密碼在儲存(save)前處理
 userSchema.pre('save', async function (next) {
