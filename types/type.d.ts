@@ -62,10 +62,19 @@ interface getAnalysisDataRes{
   top5: IWalletItem[]
 }
 
-interface loginReq{
+interface signUpReq{
+  userName: string,
   account: string,
   password: string
 }
+interface getUserRes{
+  success: boolean, 
+  message: {
+    user: Pick<signUpReq, 'account' | 'userName'>
+  }
+}
+
+type logInReq = Pick<signUpReq, 'account' | 'password'>
 
 interface logoutReq{
   token: string

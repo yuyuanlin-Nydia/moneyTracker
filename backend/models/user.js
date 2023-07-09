@@ -5,11 +5,11 @@ const jwt = require('jsonwebtoken')
 const userSchema = new Schema({
   account: {
     type: String,
-    required: [true, 'Account is required.']
+    required: [true, 'Account is required.'],
   },
   password: {
     type: String,
-    required: [true, 'Password is required.']
+    required: [true, 'Password is required.'],
   },
   userName: {
     type: String,

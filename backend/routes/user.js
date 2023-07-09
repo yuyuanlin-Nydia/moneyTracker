@@ -4,7 +4,7 @@ const express = require('express')
 const User = require('../models/user.js')
 const userRouter = express.Router()
 
-userRouter.post('/signup', async (req, res) => {
+userRouter.post('/signUp', async (req, res) => {
   try {
     // 從 req.body 獲取驗證資訊，並在資料庫存與該用戶
     const user = await User.create(req.body)
@@ -52,6 +52,46 @@ userRouter.post('/getValidateToken', async (req, res) => {
         message: {
           user,
           token
+        }
+      })
+  } catch (err) {
+    console.log(err.message)
+    res.send({
+      success: false,
+      error: {
+        code: 1001,
+        message: err.message
+      }
+    })
+  }
+})
+
+userRouter.post('/getUser', async (req, res) => {
+  try {
+    console.log(req.cookies)
+    if(!req.cookies.token){
+      return res.send({success: true})
+    }
+    const user = await User.aggregate([
+      {
+        $match: {
+        'tokens.token': { "$in" : [ req.cookies.token ]} 
+        }
+      },{
+        $project:{
+          _id: 0,
+          password: 0,
+          registerDate: 0,
+          tokens: 0
+        }
+      }
+    ]
+    )
+    res
+      .send({
+        success: true,
+        message: {
+          user: user[0]
         }
       })
   } catch (err) {

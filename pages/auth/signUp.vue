@@ -1,0 +1,28 @@
+<script setup lang="ts">
+const user = useUser()
+const query = ref<signUpReq>({
+	userName: '',
+	account: '',
+	password: ''
+})
+</script>
+
+<template>
+	<form class="w-full" @submit.prevent="user.signUp(query)">
+		<label class="block w-full mt-6">
+			User Name
+			<input class="authInput" type="text" v-model="query.userName">
+		</label>
+		<label class="block w-full mt-3">
+			Account
+			<input class="authInput" type="text" v-model="query.account">
+		</label>
+		<label class="block mt-3">
+			Password
+			<input class="authInput" type="password" v-model="query.password">
+		</label>
+		<button class="btn mt-8 bg-secondary-100 text-white w-full">
+			Sign up
+		</button>
+	</form>
+</template>

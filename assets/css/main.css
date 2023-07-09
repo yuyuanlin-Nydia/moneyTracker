@@ -31,6 +31,10 @@
     @apply rounded border border-gray-400 p-1 text-black
 }
 
+.authInput{
+    @apply block bg-gray-100 py-1 px-2 border-2 focus:outline-none focus:bg-white focus:ring-1 focus:border-primary-100  focus:ring-primary-200 rounded w-full
+}
+
 .drag-chosen{
     @apply bg-primary-400 rounded p-1
 }

@@ -2,11 +2,12 @@ export const useUser = defineStore('user', {
   state: () => {
     return {
       isLoggedIn: false,
+      userInfo: {} as Pick<signUpReq, 'account' | 'userName'>
     }
   },
   getters: {},
   actions: {
-    async login(query: loginReq) {
+    async logIn(query: logInReq) {
       const { success, message } = await getValidateToken(query)
       if(success){
         const token = useCookie('token'); 
@@ -14,6 +15,22 @@ export const useUser = defineStore('user', {
         setToken(message.token)
         this.isLoggedIn = true;
         useRouter().push('/user/overview')
+      }
+    },
+    async signUp(query: signUpReq) {
+      const { success, message } = await signUp(query)
+      if(success){
+        const token = useCookie('token'); 
+        token.value = message.token
+        setToken(message.token)
+        this.isLoggedIn = true;
+        useRouter().push('/user/overview')
+      }
+    },
+    async getUser() {
+      const { success, message } = await getUser()
+      if(success && message){
+        this.userInfo = message.user;
       }
     },
     async logout(){

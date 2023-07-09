@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 const user = useUser()
-const { isLoggedIn } = storeToRefs(user)
+const { isLoggedIn, userInfo } = storeToRefs(user)
+
+user.getUser()
 </script>
 
 <template>
@@ -15,11 +17,15 @@ const { isLoggedIn } = storeToRefs(user)
       <NuxtLink v-slot="{ isActive }" to="/ProductPlan" title="Product Plan">
         <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Product Plan</span>
       </NuxtLink>
-      <NuxtLink v-slot="{ isActive }" class="mx-3" to="/login" title="Login" v-if="!isLoggedIn">
-        <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Login</span>
+      <NuxtLink v-slot="{ isActive }" class="mx-3" to="/auth/logIn" title="Log In" v-if="!isLoggedIn">
+        <span :class="['hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Log in</span>
+      </NuxtLink>
+      <NuxtLink v-slot="{ isActive }" class="mx-3" to="/auth/signUp" title="Sign Up" v-if="!isLoggedIn">
+        <span :class="['hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Sign up</span>
       </NuxtLink>
       <NuxtLink v-slot="{ isActive }" class="mx-3" to="/user/overview" title="Account" v-if="isLoggedIn">
-        <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">My dashboard</span>
+        <span :class="['hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">{{ userInfo.userName }}'s
+          dashboard</span>
       </NuxtLink>
     </div>
   </nav>

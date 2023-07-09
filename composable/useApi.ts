@@ -1,5 +1,5 @@
-
 const useApi = function(url: string, body: Record<string, any> = {}): Promise<any>{
+  const { $toast } = useNuxtApp();
   const runtimeConfig = useRuntimeConfig()
   const { apiBaseURL } = runtimeConfig.public
   return useFetch(url,{
@@ -14,18 +14,32 @@ const useApi = function(url: string, body: Record<string, any> = {}): Promise<an
     },
   })
   .then(res => {
-    const data = res.data.value
+    const data: any = res.data.value
     const error = res.error.value
+    if(data){
+      if(data.error){
+        $toast.error(data.error.message)
+      }
+      return data
+    }
+
     if (error) {
       console.log(error)
-    } else {
-      return data
     }
   })
 }
-// Login & Logout
-export async function getValidateToken(query: loginReq){
+
+// Log In & Sign Up & Log out 
+export async function getValidateToken(query: logInReq){
   return await useApi('/user/getValidateToken', query)
+}
+
+export async function signUp(query: signUpReq){
+  return await useApi('/user/signUp', query)
+}
+
+export async function getUser(): Promise<getUserRes>{
+  return await useApi('/user/getUser')
 }
 
 export async function logoutUser(query: logoutReq){
