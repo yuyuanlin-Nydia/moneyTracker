@@ -1,9 +1,8 @@
 const useApi = function(url: string, body: Record<string, any> = {}): Promise<any>{
   const { $toast } = useNuxtApp();
-  const runtimeConfig = useRuntimeConfig()
-  const { apiBaseURL } = runtimeConfig.public
+  const origin = useRequestURL().origin
   return useFetch(url,{
-    baseURL: apiBaseURL,
+    baseURL: origin + '/api',
     method: "POST",
     body,
     credentials: 'include',
@@ -30,8 +29,8 @@ const useApi = function(url: string, body: Record<string, any> = {}): Promise<an
 }
 
 // Log In & Sign Up & Log out 
-export async function getValidateToken(query: logInReq){
-  return await useApi('/user/getValidateToken', query)
+export async function logIn(query: logInReq){
+  return await useApi('/user/logIn', query)
 }
 
 export async function signUp(query: signUpReq){
@@ -42,8 +41,8 @@ export async function getUser(): Promise<getUserRes>{
   return await useApi('/user/getUser')
 }
 
-export async function logoutUser(query: logoutReq){
-  return await useApi('/user/logout', query)
+export async function logOutUser(query: logoutReq){
+  return await useApi('/user/logOut', query)
 }
 
 // Overview page

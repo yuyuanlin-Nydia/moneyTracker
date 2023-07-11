@@ -8,7 +8,7 @@ export const useUser = defineStore('user', {
   getters: {},
   actions: {
     async logIn(query: logInReq) {
-      const { success, message } = await getValidateToken(query)
+      const { success, message } = await logIn(query)
       if(success){
         const token = useCookie('token'); 
         token.value = message.token
@@ -34,7 +34,7 @@ export const useUser = defineStore('user', {
       }
     },
     async logout(){
-      const { success } = await logoutUser({ token: getToken()! })
+      const { success } = await logOutUser({ token: getToken()! })
       if(success){
         const token = useCookie('token'); 
         token.value = ''

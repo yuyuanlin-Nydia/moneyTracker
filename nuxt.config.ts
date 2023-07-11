@@ -25,8 +25,9 @@ export default defineNuxtConfig({
     transpile: ["@vuepic/vue-datepicker"],
   },
   runtimeConfig: {
-    public: {
-      apiBaseURL: 'http://localhost:5000'
-    }
+    mongoUrl: process.env.MONGO_URL
+  },
+  nitro:{
+    plugins: ["~/server/index.ts"]
   }
 })

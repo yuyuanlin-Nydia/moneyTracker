@@ -41,7 +41,7 @@ walletTotalAmount.value = await getWalletTotalAmount()
             <div class="mb-4">
               <BaseSelect :list="WalletType" v-model="type" :customClass="['w-full']" />
             </div>
-            <div class="center p-2 bg-info-500 rounded-xl mb-3" v-for="item in walletTotalAmount" :key="item.type">
+            <div class="center p-2 bg-info-500 rounded-xl mb-3" v-for="item in walletTotalAmount" :key="item._id">
               <icon class="text-5xl font-extrabold mr-3 text-secondary-100"
                 :name="item._id === 'Income' ? 'ic:sharp-plus' : 'ic:sharp-minus'" />
               <div>
