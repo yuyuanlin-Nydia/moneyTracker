@@ -1,7 +1,7 @@
-import { User } from '.';
 import { MongoServerError } from 'mongodb'
+import { User } from '.'
 
-export default defineEventHandler(async (event) =>{
+export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
     // 從 req.body 獲取驗證資訊，並在資料庫存與該用戶
@@ -14,20 +14,21 @@ export default defineEventHandler(async (event) =>{
       success: true,
       message: {
         user,
-        token
-      }
+        token,
+      },
     }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     console.log(err)
-    if (err instanceof MongoServerError && err.code === 11000) {
+    if (err instanceof MongoServerError && err.code === 11000)
       err.message = 'Account already exists! Please change.'
-    }
+
     return {
       success: false,
       error: {
         code: 1002,
-        message: err.message
-      }
+        message: err.message,
+      },
     }
   }
 })

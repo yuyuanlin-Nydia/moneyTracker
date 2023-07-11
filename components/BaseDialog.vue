@@ -1,53 +1,53 @@
 <script lang="ts">
 import {
-  TransitionRoot,
-  TransitionChild,
   Dialog,
   DialogPanel,
   DialogTitle,
-} from '@headlessui/vue' 
+  TransitionChild,
+  TransitionRoot,
+} from '@headlessui/vue'
 
 export default defineComponent({
   name: 'BaseDialog',
-  components:{ TransitionRoot,TransitionChild,Dialog, DialogPanel, DialogTitle},
-  props:{
+  components: { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle },
+  props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     okText: {
       validator(value: string) {
         return ['Save', 'Delete'].includes(value)
       },
       required: false,
-      default: 'Save'
-    }
+      default: 'Save',
+    },
   },
-  setup(props){
-    const {proxy} = getCurrentInstance()!;
+  setup(props) {
+    const { proxy } = getCurrentInstance()!
     const isShow = ref(true)
 
-    function hide(){
-      isShow.value =false
+    function hide() {
+      isShow.value = false
     }
-    function show(){
-      isShow.value =true
+    function show() {
+      isShow.value = true
     }
 
     Object.assign(proxy!, { show, hide })
 
-    return{
+    return {
       props,
       isShow,
       hide,
     }
-  }
+  },
 })
 </script>
 
 <template>
-  <TransitionRoot appear :show="isShow" as="template" >
-    <Dialog as="div" @close="hide" class="relative z-10">
+  <TransitionRoot appear :show="isShow" as="template">
+    <Dialog as="div" class="relative z-10" @close="hide">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -82,7 +82,7 @@ export default defineComponent({
               >
                 {{ title }}
               </DialogTitle>
-              
+
               <div class="my-5">
                 <p class="text-sm text-gray-200">
                   <slot name="content" />
@@ -93,7 +93,7 @@ export default defineComponent({
                 <button
                   type="button"
                   class="btn mr-4 text-white "
-                  :class="okText==='Save'? 'bg-green-600 hover:bg-green-400': 'bg-red-600 :hover:bg-red-400'"
+                  :class="okText === 'Save' ? 'bg-green-600 hover:bg-green-400' : 'bg-red-600 :hover:bg-red-400'"
                   @click="$emit('confirm')"
                 >
                   {{ okText }}
@@ -102,7 +102,7 @@ export default defineComponent({
                   type="button"
                   class="btn bg-blue-600 text-white hover:bg-blue-400"
                   @click="$emit('cancel')"
-                  >
+                >
                   Cancel
                 </button>
               </div>

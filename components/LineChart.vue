@@ -1,16 +1,24 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
+
+const props = defineProps({
+  chartData: {
+    type: Object as PropType<ILineDataObj>,
+    required: true,
+  },
+  label: String,
+})
 
 ChartJS.register(
   CategoryScale,
@@ -19,16 +27,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 )
-
-const props = defineProps({
-  chartData: {
-    type: Object as PropType<ILineDataObj>,
-    required: true
-  },
-  label: String
-})
 
 const data = computed(() => {
   return {
@@ -39,9 +39,9 @@ const data = computed(() => {
         backgroundColor: '#F59B33',
         data: props.chartData.total,
         borderColor: 'lightGray',
-        borderWidth: 2
-      }
-    ]
+        borderWidth: 2,
+      },
+    ],
   }
 })
 
@@ -51,24 +51,23 @@ const options = {
   plugins: {
     legend: {
       labels: {
-        color: "#F59B33",
-      }
+        color: '#F59B33',
+      },
     },
   },
   scales: {
     x: {
-      ticks: { color: "white" },
-      grid: { color: '#a1a1a1' }
+      ticks: { color: 'white' },
+      grid: { color: '#a1a1a1' },
     },
     y: {
-      ticks: { color: "white" },
-      grid: { color: '#a1a1a1' }
-    }
-  }
+      ticks: { color: 'white' },
+      grid: { color: '#a1a1a1' },
+    },
+  },
 }
 </script>
 
 <template>
   <Line :data="data" :options="options" />
 </template>
-

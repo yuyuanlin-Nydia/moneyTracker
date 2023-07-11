@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import DefaultDialog from '~/components/DefaultDialog.vue';
-import WalletDialog from '~/components/WalletDialog.vue';
-import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue';
+import DefaultDialog from '~/components/DefaultDialog.vue'
+import WalletDialog from '~/components/WalletDialog.vue'
+import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
 
-const { $dialog, $toast } = useNuxtApp();
-const route = useRoute();
+const { $dialog, $toast } = useNuxtApp()
+const route = useRoute()
 const walletTypeOption = ref(WalletType)
 const expenseTypeOption = ref(expenseCategory)
 const incomeTypeOption = ref(incomeCategory)
@@ -13,22 +13,22 @@ const monthEnd = dayjsTz().endOf('month').startOf('day').toDate()
 const query = ref<IWalletQuery>({
   type: route.query.type as string || 'Expense',
   category: [],
-  date: [monthStart, monthEnd]
+  date: [monthStart, monthEnd],
 })
-const walletList = ref<getWalletRes[]>([]);
+const walletList = ref<getWalletRes[]>([])
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
 const sideDownCategory = ref<string[]>([])
 const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(null)
 
 const categoryOption = computed(() => {
-  return (query.value.type === "Expense"
+  return (query.value.type === 'Expense'
     ? expenseTypeOption.value
     : incomeTypeOption.value)
 })
 const totalAmount = computed(() => {
   let total = 0
-  walletList.value.forEach(item => {
+  walletList.value.forEach((item) => {
     total += item.total
   })
 
@@ -40,7 +40,7 @@ watch(() => query.value.type, (newValue) => {
     ? expenseTypeOption.value
     : incomeTypeOption.value
 },
-  { immediate: true }
+{ immediate: true },
 )
 onMounted(async () => {
   dateRangeSelector.value?.selectDateRange('This month')
@@ -53,11 +53,13 @@ async function fetchWallet() {
     const formatQuery = { ...query.value, category: query.value.category.sort() }
     const result = await getWallet(formatQuery)
     walletList.value = result
-    loading.value = true;
-  } catch (err) {
+    loading.value = true
+  }
+  catch (err) {
     console.error(err)
-  } finally {
-    loading.value = false;
+  }
+  finally {
+    loading.value = false
   }
 }
 
@@ -68,15 +70,15 @@ function itemDateFormat(date: string) {
 async function dragEnd() {
   drag.value = false
   const newDragList: Pick<IWalletItem, '_id' | 'category'>[] = walletList.value.map((categoryItem) => {
-    return categoryItem.list.map(item => {
+    return categoryItem.list.map((item) => {
       return {
         _id: item._id,
-        category: categoryItem._id
+        category: categoryItem._id,
       }
     })
   }).flat()
 
-  const result = await editSingleWalletCategory(newDragList);
+  const result = await editSingleWalletCategory(newDragList)
   if (result.success) {
     await fetchWallet()
     $toast.success('Edit category successfully!')
@@ -87,7 +89,8 @@ function toggleSlide(_id: string) {
   if (sideDownCategory.value.includes(_id)) {
     const startIndex = sideDownCategory.value.indexOf(_id)
     sideDownCategory.value.splice(startIndex, 1)
-  } else {
+  }
+  else {
     sideDownCategory.value.push(_id)
   }
 }
@@ -103,10 +106,10 @@ function openAddDialog() {
   $dialog
     .open(
       WalletDialog,
-      { title: 'Add' }
+      { title: 'Add' },
     )
     .onOk(async (data) => {
-      const result = await addSingleWallet(data);
+      const result = await addSingleWallet(data)
       if (result.success) {
         await fetchWallet()
         $toast.success('Add successfully!')
@@ -119,12 +122,12 @@ function openEditDialog(walletItem: IWalletItem) {
   $dialog
     .open(
       WalletDialog, {
-      title: 'Edit',
-      walletItem: { ...walletItem },
-    }
+        title: 'Edit',
+        walletItem: { ...walletItem },
+      },
     )
     .onOk(async (data) => {
-      const result = await editSingleWallet(data);
+      const result = await editSingleWallet(data)
       if (result.success) {
         walletList.value = await getWallet(query.value)
         $toast.success('Edit successfully!')
@@ -139,10 +142,10 @@ function openDeleteDialog(data: IWalletItem) {
       title: 'Confirmation',
       okText: 'Delete',
       content: `Are you sure to delete item-${data.item}?`,
-      data
+      data,
     })
     .onOk(async (data) => {
-      const result = await deleteSingleWallet(data._id);
+      const result = await deleteSingleWallet(data._id)
       if (result.success) {
         await fetchWallet()
         $toast.success('Delete successfully!')
@@ -157,12 +160,12 @@ function openDeleteDialog(data: IWalletItem) {
       <div class="text-lg">
         <div class="mb-2">
           <span class="inline-block w-24">Type : </span>
-          <BaseSelect :list="walletTypeOption" v-model="query.type" />
+          <BaseSelect v-model="query.type" :list="walletTypeOption" />
         </div>
         <div class="mb-2">
           <span class="inline-block w-24">Category : </span>
-          <div class="inline mr-2" v-for="category in categoryOption" :key="category">
-            <input class="mr-1" type="checkbox" :value=category :id="category" checked v-model="query.category">
+          <div v-for="category in categoryOption" :key="category" class="inline mr-2">
+            <input :id="category" v-model="query.category" class="mr-1" type="checkbox" :value="category" checked>
             <label :for="category">{{ category }}</label>
           </div>
         </div>
@@ -174,7 +177,7 @@ function openDeleteDialog(data: IWalletItem) {
         </div>
       </div>
       <div>
-        <button @click="fetchWallet" class="btn-primary my-4">
+        <button class="btn-primary my-4" @click="fetchWallet">
           Search
         </button>
       </div>
@@ -191,40 +194,54 @@ function openDeleteDialog(data: IWalletItem) {
     </div>
   </div>
   <br>
-  <div class="h-1/3 relative" v-if="loading">
-    <Loading :show=loading />
+  <div v-if="loading" class="h-1/3 relative">
+    <Loading :show="loading" />
   </div>
   <div v-else-if="walletList.length">
-    <div class="text-gray-100 text-lg font-bold">TOTAL: NT${{ totalAmount }}</div>
+    <div class="text-gray-100 text-lg font-bold">
+      TOTAL: NT${{ totalAmount }}
+    </div>
     <ul>
       <li v-for="{ list, _id, total } in walletList" :key="_id" class="bg-primary-100 rounded-lg p-3 mb-3">
         <div class="text-xl font-bold mb-2">
-          <Icon @click="toggleSlide(_id)" :name="sideDownCategory.includes(_id) ? 'ic:sharp-minus' : 'ic:sharp-plus'"
-            :class="['inline-block', 'align-middle', 'rounded', 'text-2xl', 'mr-2', list.length ? 'bg-secondary-100 cursor-pointer' : 'bg-gray-300']" />
+          <Icon
+            :name="sideDownCategory.includes(_id) ? 'ic:sharp-minus' : 'ic:sharp-plus'" class="inline-block align-middle rounded text-2xl mr-2"
+            :class="[list.length ? 'bg-secondary-100 cursor-pointer' : 'bg-gray-300']" @click="toggleSlide(_id)"
+          />
           <span>{{ _id }} ${{ total.toLocaleString() }}</span>
         </div>
-        <draggable :list="list" itemKey="_id" :sort="false" ghost-class="ghost" chosen-class="drag-chosen" animation="300"
-          @start="drag = true" @end="dragEnd" tag="ul" group="wallet" handle=".moveIcon">
+        <draggable
+          :list="list" item-key="_id" :sort="false" ghost-class="ghost" chosen-class="drag-chosen" animation="300"
+          tag="ul" group="wallet" handle=".moveIcon" @start="drag = true" @end="dragEnd"
+        >
           <template #item="{ element }">
-      <li v-show="sideDownCategory.includes(_id)"
-        class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100">
-        <div>
-          <Icon name="material-symbols:drag-indicator"
-            class="moveIcon align-text-top cursor-move text-white rounded-full p-1 text-xl" />
-          {{ itemDateFormat(element.date) }} {{ element.item }}
-        </div>
-        <div>
-          <div class="inline-block" v-html="amountHTML(element)"></div>
-          <Icon name="material-symbols:edit"
-            class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl mr-1.5"
-            @click="openEditDialog(element)" />
-          <Icon name="material-symbols:delete"
-            class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
-            @click="openDeleteDialog(element)" />
-        </div>
-      </li>
-      </template>
-      </draggable>
+            <li
+              v-show="sideDownCategory.includes(_id)"
+              class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100"
+            >
+              <div>
+                <Icon
+                  name="material-symbols:drag-indicator"
+                  class="moveIcon align-text-top cursor-move text-white rounded-full p-1 text-xl"
+                />
+                {{ itemDateFormat(element.date) }} {{ element.item }}
+              </div>
+              <div>
+                <div class="inline-block" v-html="amountHTML(element)" />
+                <Icon
+                  name="material-symbols:edit"
+                  class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl mr-1.5"
+                  @click="openEditDialog(element)"
+                />
+                <Icon
+                  name="material-symbols:delete"
+                  class="align-text-top cursor-pointer text-white bg-secondary-100 rounded-full p-1 text-xl"
+                  @click="openDeleteDialog(element)"
+                />
+              </div>
+            </li>
+          </template>
+        </draggable>
       </li>
     </ul>
   </div>

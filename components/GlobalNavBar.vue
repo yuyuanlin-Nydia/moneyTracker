@@ -15,16 +15,16 @@ user.getUser()
     </NuxtLink>
     <div>
       <NuxtLink v-slot="{ isActive }" to="/ProductPlan" title="Product Plan">
-        <span :class="['mx-3', 'hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Product Plan</span>
+        <span class="mx-3 hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">Product Plan</span>
       </NuxtLink>
-      <NuxtLink v-slot="{ isActive }" class="mx-3" to="/auth/logIn" title="Log In" v-if="!isLoggedIn">
-        <span :class="['hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Log in</span>
+      <NuxtLink v-if="!isLoggedIn" v-slot="{ isActive }" class="mx-3" to="/auth/logIn" title="Log In">
+        <span class="hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">Log in</span>
       </NuxtLink>
-      <NuxtLink v-slot="{ isActive }" class="mx-3" to="/auth/signUp" title="Sign Up" v-if="!isLoggedIn">
-        <span :class="['hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">Sign up</span>
+      <NuxtLink v-if="!isLoggedIn" v-slot="{ isActive }" class="mx-3" to="/auth/signUp" title="Sign Up">
+        <span class="hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">Sign up</span>
       </NuxtLink>
-      <NuxtLink v-slot="{ isActive }" class="mx-3" to="/user/overview" title="Account" v-if="isLoggedIn">
-        <span :class="['hover:underline', isActive ? 'text-black' : 'hover:text-gray-500']">{{ userInfo.userName }}'s
+      <NuxtLink v-if="isLoggedIn" v-slot="{ isActive }" class="mx-3" to="/user/overview" title="Account">
+        <span class="hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">{{ userInfo.userName }}'s
           dashboard</span>
       </NuxtLink>
     </div>

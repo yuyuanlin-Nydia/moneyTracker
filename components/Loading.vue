@@ -1,15 +1,14 @@
 <script setup lang="ts">
 defineProps({
-  show: Boolean
+  show: Boolean,
 })
- 
 </script>
 
 <template>
-  <div class="spinner" v-if="show">
-    <span class="spinner-inner-1"></span>
-    <span class="spinner-inner-2"></span>
-    <span class="spinner-inner-3"></span>
+  <div v-if="show" class="spinner">
+    <span class="spinner-inner-1" />
+    <span class="spinner-inner-2" />
+    <span class="spinner-inner-3" />
   </div>
 </template>
 
@@ -32,15 +31,15 @@ $size: 48px;
     height: 100%;
     border-radius: 50%;
   }
-  
+
   .spinner-inner-1 {
     background: linear-gradient(to right, rgba($spinner,0) 0%,rgba($spinner,0) 50%,$spinner 51%);
   }
-  
+
   .spinner-inner-2 {
     background: linear-gradient(to top, rgba($background,0) 0%,$background 100%);
   }
-  
+
   .spinner-inner-3 {
     $offset: $size * 0.1;
     top: $offset;

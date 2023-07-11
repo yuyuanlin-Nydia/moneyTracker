@@ -1,60 +1,60 @@
 <script lang="ts" setup>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-import dayjs from "dayjs";
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+import dayjs from 'dayjs'
 
 interface Props {
-  title: string,
+  title: string
   walletItem?: {
-    type: string,
-    category: string,
-    date:string,
-    item: string,
+    type: string
+    category: string
+    date: string
+    item: string
     amount: number | null
-  } 
-}
-const props = withDefaults(defineProps<Props>(),{
-  walletItem: () => { 
-    return {
-      type: "Expense",
-      category: "Food",
-      date: dayjs().format(DateEnum.dateFormat),
-      item:"",
-      amount: null
-    }
   }
-})   
+}
+const props = withDefaults(defineProps<Props>(), {
+  walletItem: () => {
+    return {
+      type: 'Expense',
+      category: 'Food',
+      date: dayjs().format(DateEnum.dateFormat),
+      item: '',
+      amount: null,
+    }
+  },
+})
 const walletTypeOption = ToArray(WalletTypeEnum)
 const expenseTypeOption = ref(expenseCategory)
 const incomeTypeOption = ref(incomeCategory)
-const { dialogRef, onDialogOK, onDialogHide } = useDialogPlugin();
+const { dialogRef, onDialogOK, onDialogHide } = useDialogPlugin()
 const localWalletItem = ref(props.walletItem)
-const categoryOption = computed(()=>{
+const categoryOption = computed(() => {
   return (localWalletItem.value.type === 'Expense'
     ? expenseTypeOption.value
     : incomeTypeOption.value)
 })
 const date = computed({
-  get() { 
-    return dayjsTz(localWalletItem.value.date).format(DateEnum.dateFormat) 
+  get() {
+    return dayjsTz(localWalletItem.value.date).format(DateEnum.dateFormat)
   },
   set(newValue) {
-    localWalletItem.value.date = dayjsTz(newValue).format(DateEnum.dateFormat) 
-  }
+    localWalletItem.value.date = dayjsTz(newValue).format(DateEnum.dateFormat)
+  },
 })
 
 watch(
-  () => localWalletItem.value.type, 
+  () => localWalletItem.value.type,
   () => {
     localWalletItem.value.category = categoryOption.value[0]
-  }
+  },
 )
 
-function confirm(){
-  onDialogOK({...localWalletItem.value})
+function confirm() {
+  onDialogOK({ ...localWalletItem.value })
 }
 
-function cancel(){
+function cancel() {
   onDialogHide()
 }
 </script>
@@ -100,12 +100,12 @@ function cancel(){
       <div class="my-3">
         <label for="" class="inline-block w-20 ">Date :</label>
         <div class="inline-block align-text-top w-60">
-          <vue-date-picker
+          <VueDatePicker
+            v-model="date"
             auto-apply
             format="yyyy-MM-dd"
             menu-class-name="dp-custom-menu"
             position="left"
-            v-model="date"
             :enable-time-picker="false"
           />
         </div>

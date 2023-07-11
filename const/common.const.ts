@@ -1,3 +1,3 @@
 export enum DateEnum {
-    dateFormat = 'YYYY/MM/DD'
-}  
+  dateFormat = 'YYYY/MM/DD',
+}

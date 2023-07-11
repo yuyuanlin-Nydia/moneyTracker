@@ -1,7 +1,8 @@
 const { MongoServerError } = require('mongodb')
-const auth = require('../jwt-auth-middleware.js')
 const express = require('express')
+const auth = require('../jwt-auth-middleware.js')
 const User = require('../models/user.js')
+
 const userRouter = express.Router()
 
 userRouter.post('/signUp', async (req, res) => {
@@ -16,20 +17,21 @@ userRouter.post('/signUp', async (req, res) => {
       success: true,
       message: {
         user,
-        token
-      }
+        token,
+      },
     })
-  } catch (err) {
-    console.log(err)
-    if (err instanceof MongoServerError && err.code === 11000) {
+  }
+  catch (err) {
+    console.error(err)
+    if (err instanceof MongoServerError && err.code === 11000)
       err.message = 'Account already exists! Please change.'
-    }
+
     res.send({
       success: false,
       error: {
         code: 1002,
-        message: err.message
-      }
+        message: err.message,
+      },
     })
   }
 })
@@ -38,70 +40,71 @@ userRouter.post('/getValidateToken', async (req, res) => {
   try {
     const userData = await User.findByCredentials(req.body.account, req.body.password)
     const user = await User.findOneAndUpdate(
-      { account: userData.account }
+      { account: userData.account },
     )
     const token = await user.generateAuthToken()
     // 回傳該用戶資訊及 JWT
     res
-      .cookie("token", token, {
+      .cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === 'production',
       })
       .send({
         success: true,
         message: {
           user,
-          token
-        }
+          token,
+        },
       })
-  } catch (err) {
-    console.log(err.message)
+  }
+  catch (err) {
+    console.error(err.message)
     res.send({
       success: false,
       error: {
         code: 1001,
-        message: err.message
-      }
+        message: err.message,
+      },
     })
   }
 })
 
 userRouter.post('/getUser', async (req, res) => {
   try {
-    console.log(req.cookies)
-    if(!req.cookies.token){
-      return res.send({success: true})
-    }
+    if (!req.cookies.token)
+      return res.send({ success: true })
+
     const user = await User.aggregate([
       {
         $match: {
-        'tokens.token': { "$in" : [ req.cookies.token ]} 
-        }
-      },{
-        $project:{
+          'tokens.token': { $in: [req.cookies.token] },
+        },
+      }, {
+        $project: {
           _id: 0,
           password: 0,
           registerDate: 0,
-          tokens: 0
-        }
-      }
-    ]
+          tokens: 0,
+        },
+      },
+    ],
     )
     res
       .send({
         success: true,
         message: {
-          user: user[0]
-        }
+          user: user[0],
+        },
       })
-  } catch (err) {
-    console.log(err.message)
+  }
+  catch (err) {
+    console.error(err.message)
     res.send({
       success: false,
       error: {
         code: 1001,
-        message: err.message
-      }
+        message: err.message,
+      },
     })
   }
 })
@@ -113,15 +116,16 @@ userRouter.post('/logout', auth, async (req, res) => {
     // 將包含剩餘 Token 的使用者資料存回資料庫
     await req.user.save()
     res
-      .clearCookie("token")
+      .clearCookie('token')
       .send({ success: true, message: null })
-  } catch (err) {
+  }
+  catch (err) {
     res.send({
       success: false,
       error: {
         code: 1003,
-        message: err.message
-      }
+        message: err.message,
+      },
     })
   }
 })

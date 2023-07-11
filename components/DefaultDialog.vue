@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-const props= defineProps<{
-  title:string,
-  content:string,
-  okText?:string,
+const props = defineProps<{
+  title: string
+  content: string
+  okText?: string
   data?: Record<string, any>
 }>()
-const {dialogRef,onDialogOK, onDialogHide} = useDialogPlugin();
+const { dialogRef, onDialogOK, onDialogHide } = useDialogPlugin()
 
-function confirm(){
+function confirm() {
   onDialogOK({ ...props.data })
 }
-function cancel(){
+function cancel() {
   onDialogHide()
 }
 </script>
@@ -23,7 +23,7 @@ function cancel(){
     @cancel="cancel"
   >
     <template #content>
-      {{props.content}}
+      {{ props.content }}
     </template>
   </BaseDialog>
 </template>

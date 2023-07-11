@@ -6,5 +6,5 @@ services:
     startCommand: node .output/server/index.mjs
     buildCommand: yarn && yarn build
     envVars:
-    - key: NITRO_PRESET
-      value: render-com
+      - key: NITRO_PRESET
+        value: render-com

@@ -6,8 +6,8 @@ watch(() => route.name,
     // EX: user-overview => overview
     routeName.value = (newRouteName as string)?.split('-')[1]
   }, {
-  immediate: true,
-})
+    immediate: true,
+  })
 </script>
 
 <template>

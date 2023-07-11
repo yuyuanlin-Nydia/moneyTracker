@@ -1,14 +1,14 @@
-<script lang="ts" setup> 
+<script lang="ts" setup>
 withDefaults(defineProps<{
-  list: any[],
-  modelValue: string,
-  customClass?:string[]
+  list: any[]
+  modelValue: string
+  customClass?: string[]
 }>(), {
   customClass: () => [],
 })
 const emits = defineEmits(['update:modelValue'])
 
-function updateSelect(e: Event){
+function updateSelect(e: Event) {
   emits('update:modelValue', (e.target as HTMLInputElement).value)
 }
 </script>

@@ -7,7 +7,6 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(isoWeek)
 
-
-export function dayjsTz(val?: string){
+export function dayjsTz(val?: string) {
   return dayjs(val).tz('Asia/Taipei')
 }

@@ -1,63 +1,63 @@
-import { Wallet } from '.';
+import { Wallet } from '.'
 
-export default defineEventHandler(async(event) => {
+export default defineEventHandler(async (event) => {
   try {
     const user = event.context.user
-    const date = new Date();
+    const date = new Date()
     const totalByTypeList = await Wallet.aggregate([
       {
         $match: {
           _id: { $in: user.wallet },
           date: {
-            $gte: new Date(date.getFullYear(), date.getMonth(), 1), 
-            $lte: new Date(date.getFullYear(), date.getMonth() + 1, 0) 
+            $gte: new Date(date.getFullYear(), date.getMonth(), 1),
+            $lte: new Date(date.getFullYear(), date.getMonth() + 1, 0),
           },
         },
       },
       {
         $group: {
-          _id: "$type",
-          total: { $sum: "$amount" },
+          _id: '$type',
+          total: { $sum: '$amount' },
         },
       },
       {
         $group: {
           _id: null,
-          stats: { $push: "$$ROOT" },
+          stats: { $push: '$$ROOT' },
         },
       },
       {
         $project: {
-          type: "$_id",
+          type: '$_id',
           total: 1,
           _id: 0,
           stats: {
             $map: {
-              input: ["Income", "Expense"],
-              as: "type",
+              input: ['Income', 'Expense'],
+              as: 'type',
               in: {
                 $let: {
                   vars: {
                     dateIndex: {
                       $indexOfArray: [
-                        "$stats._id",
-                        "$$type",
+                        '$stats._id',
+                        '$$type',
                       ],
                     },
                   },
                   in: {
                     $cond: {
                       if: {
-                        $ne: ["$$dateIndex", -1],
+                        $ne: ['$$dateIndex', -1],
                       },
                       then: {
                         $arrayElemAt: [
-                          "$stats",
-                          "$$dateIndex",
+                          '$stats',
+                          '$$dateIndex',
                         ],
                       },
                       else: {
-                        _id: "$$type",
+                        _id: '$$type',
                         total: 0,
                       },
                     },
@@ -69,28 +69,28 @@ export default defineEventHandler(async(event) => {
         },
       },
       {
-        $unwind: "$stats",
+        $unwind: '$stats',
       },
       {
         $replaceRoot: {
-          newRoot: "$stats",
+          newRoot: '$stats',
         },
       },
     ])
     const noMatchResult = [
       {
-        "_id": "Income",
-        "total": 0
+        _id: 'Income',
+        total: 0,
       },
       {
-        "_id": "Expense",
-        "total": 0
-      }
+        _id: 'Expense',
+        total: 0,
+      },
     ]
     const result = totalByTypeList.length ? totalByTypeList : noMatchResult
-    console.log(result)
     return result
-  } catch (err) {
-    console.log(err)
+  }
+  catch (err) {
+    console.error(err)
   }
 })

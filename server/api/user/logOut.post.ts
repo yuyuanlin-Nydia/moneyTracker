@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) =>{
+export default defineEventHandler(async (event) => {
   try {
     const user = event.context.user
     // 篩選掉當前的 Token
@@ -8,13 +8,14 @@ export default defineEventHandler(async (event) =>{
     deleteCookie(event, 'token')
 
     return { success: true, message: null }
-  } catch (err: any) {
+  }
+  catch (err: any) {
     return {
       success: false,
       error: {
         code: 1003,
-        message: err.message
-      }
+        message: err.message,
+      },
     }
   }
 })

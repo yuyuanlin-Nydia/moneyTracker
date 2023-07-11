@@ -1,15 +1,16 @@
-const path = require('path')
+const path = require('node:path')
+const { createServer } = require('node:http')
 const dotenv = require('dotenv')
 const express = require('express')
-const { createServer } = require('http')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const { connectMongoDB } = require('./db')
 const { userRouter } = require('./routes/user')
 const { walletRouter } = require('./routes/wallet')
 const { analysisRouter } = require('./routes/analysis')
+
 const app = express()
 const auth = require('./jwt-auth-middleware.js')
-const cookieParser = require("cookie-parser");
 
 dotenv.config()
 connectMongoDB()
@@ -20,7 +21,7 @@ const corsOptions = {
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 }
 const port = process.env.BACKEND_PORT || 5000
 app
@@ -39,11 +40,10 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname1, 'dist', 'index.html'))
   })
-} else {
+}
+else {
   app.get('/', (req, res) => {
     res.send('success')
   })
 }
 httpServer.listen(port)
-
-

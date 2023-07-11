@@ -4,27 +4,27 @@ const { Schema, model } = require('mongoose')
 const walletSchema = new Schema({
   type: {
     type: String,
-    require: true
+    require: true,
   },
   category: {
     type: String,
-    require: true
+    require: true,
   },
   amount: {
     type: Number,
-    require: true
+    require: true,
   },
   item: {
     type: String,
-    require: true
+    require: true,
   },
   date: {
     type: Date,
-    require: true
+    require: true,
   },
   recordAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   // postBy: {
   //   type: ObjectId,

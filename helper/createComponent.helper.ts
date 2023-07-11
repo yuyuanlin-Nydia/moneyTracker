@@ -1,13 +1,12 @@
-export const createNode = (id: string) => {
-  const elm = document.createElement('div');
-  if( id !== void 0){
-    elm.id = id;
-  }
+export function createNode(id: string) {
+  const elm = document.createElement('div')
+  if (id !== void 0)
+    elm.id = id
 
   document.body.appendChild(elm)
-  return elm;
+  return elm
 }
 
-export const removeNode = (elm: HTMLElement) => {
+export function removeNode(elm: HTMLElement) {
   document.body.removeChild(elm)
 }

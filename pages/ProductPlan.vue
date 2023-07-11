@@ -4,11 +4,13 @@
 
 <template>
   <div class="flex items-center flex-col py-6">
-    <p class="text-4xl font-bold mb-3">Product Plan</p>
+    <p class="text-4xl font-bold mb-3">
+      Product Plan
+    </p>
     <table class="text-2xl w-full lg:w-9/12 text-center">
       <thead class="text-3xl text-primary-200 border-b-2 border-secondary-100">
         <tr>
-          <td></td>
+          <td />
           <td>Free</td>
           <td>Premium</td>
         </tr>
@@ -62,7 +64,6 @@
         </tr>
       </tbody>
     </table>
-
   </div>
 </template>
 

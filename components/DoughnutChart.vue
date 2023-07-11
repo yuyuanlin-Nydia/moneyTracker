@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, } from 'chart.js'
+import { ArcElement, Chart as ChartJS, Legend, Title, Tooltip } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 import type { PropType } from 'vue'
-ChartJS.register(ArcElement, Tooltip, Legend, Title)
 
 const props = defineProps({
   chartData: {
     type: Object as PropType<IDoughnutData>,
-    required: true
+    required: true,
   },
-  title: String
+  title: String,
 })
+
+ChartJS.register(ArcElement, Tooltip, Legend, Title)
 
 const data = computed(() => {
   return {
@@ -23,9 +24,9 @@ const data = computed(() => {
           '#A338FE',
           '#FE27A4',
         ],
-        data: props.chartData.total
-      }
-    ]
+        data: props.chartData.total,
+      },
+    ],
   }
 })
 
@@ -37,16 +38,16 @@ const options = {
       text: props.title,
       color: 'white',
       font: {
-        size: 14
-      }
+        size: 14,
+      },
     },
     legend: {
       labels: {
-        color: "lightgray",
-        position: "top"
-      }
-    }
-  }
+        color: 'lightgray',
+        position: 'top',
+      },
+    },
+  },
 }
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TabGroup, TabList, Tab, TransitionRoot, TabPanels, TabPanel } from '@headlessui/vue'
+import { Tab, TabGroup, TabList, TransitionRoot } from '@headlessui/vue'
 
 const isTransition = ref<boolean>(true)
 const route = useRoute()
@@ -14,11 +14,10 @@ watch(() => route.fullPath, () => {
 definePageMeta({
   layout: 'plain',
   middleware: [function () {
-    const token = useCookie('token');
-    if (token.value) {
+    const token = useCookie('token')
+    if (token.value)
       return navigateTo('/user/overview')
-    }
-  }]
+  }],
 })
 </script>
 
@@ -29,16 +28,20 @@ definePageMeta({
         <TabList class="border border-primary-100 text-2xl mb-5">
           <Tab>
             <NuxtLink v-slot="{ isActive }" to="/auth/logIn" title="Sign Up">
-              <span class="px-4 py-2  inline-block"
-                :class="{ 'bg-primary-100 text-white': isActive, 'bg-white text-primary-100': !isActive }">
+              <span
+                class="px-4 py-2  inline-block"
+                :class="{ 'bg-primary-100 text-white': isActive, 'bg-white text-primary-100': !isActive }"
+              >
                 Log In
               </span>
             </NuxtLink>
           </Tab>
           <Tab>
             <NuxtLink v-slot="{ isActive }" to="/auth/signUp" title="Sign Up">
-              <span class="px-4 py-2  inline-block"
-                :class="{ 'bg-primary-100 text-white': isActive, 'bg-white text-primary-100': !isActive }">
+              <span
+                class="px-4 py-2  inline-block"
+                :class="{ 'bg-primary-100 text-white': isActive, 'bg-white text-primary-100': !isActive }"
+              >
                 Sign Up
               </span>
             </NuxtLink>
@@ -46,9 +49,11 @@ definePageMeta({
         </TabList>
       </TabGroup>
       <div class="h-1/2">
-        <TransitionRoot :show="isTransition" enter="transition-all duration-75" enter-from="-translate-x-10 opacity-0"
+        <TransitionRoot
+          :show="isTransition" enter="transition-all duration-75" enter-from="-translate-x-10 opacity-0"
           enter-to="translate-x-0 opacity-100 " leave="transition-translate transition-opacity duration-150"
-          leave-from="translate-all opacity-100" leave-to="translate-x-10 opacity-0">
+          leave-from="translate-all opacity-100" leave-to="translate-x-10 opacity-0"
+        >
           <NuxtPage />
         </TransitionRoot>
       </div>
@@ -57,7 +62,9 @@ definePageMeta({
       <h1 class="text-secondary-200 font-bold text-center text-6xl">
         Money Tracker
       </h1>
-      <p class="text-gray-100 mt-5 text-center">Your best choice for money-saving, record and analysis.</p>
+      <p class="text-gray-100 mt-5 text-center">
+        Your best choice for money-saving, record and analysis.
+      </p>
     </div>
   </div>
 </template>

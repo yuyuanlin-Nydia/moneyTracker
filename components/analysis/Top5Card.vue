@@ -2,13 +2,15 @@
 import type { PropType } from 'vue'
 
 const props = defineProps({
-  items: Object as PropType<IWalletItem[]>
+  items: Object as PropType<IWalletItem[]>,
 })
 </script>
 
 <template>
-  <p class="text-2xl bg-primary-400 mb-4">Top 5</p>
-  <table class="w-full" v-if="items?.length">
+  <p class="text-2xl bg-primary-400 mb-4">
+    Top 5
+  </p>
+  <table v-if="items?.length" class="w-full">
     <thead>
       <tr class="text-left text-gray-400">
         <th>Rank</th>
@@ -19,8 +21,10 @@ const props = defineProps({
       </tr>
     </thead>
     <tbody>
-      <tr class="border-b border-primary-100" v-for="(item, idx) in props.items">
-        <td class="text-2xl text-secondary-100">{{ idx + 1 }}</td>
+      <tr v-for="(item, idx) in props.items" class="border-b border-primary-100">
+        <td class="text-2xl text-secondary-100">
+          {{ idx + 1 }}
+        </td>
         <td>{{ item.category }}</td>
         <td>{{ item.item }}</td>
         <td>${{ item.amount }}</td>

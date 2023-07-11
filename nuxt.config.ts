@@ -2,15 +2,15 @@
 export default defineNuxtConfig({
   modules: [
     ['@pinia/nuxt', {
-      autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs' ],
+      autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs'],
     }],
     'nuxt-icon',
     'nuxt-headlessui',
-    '@vueuse/nuxt'
-    ],
-  imports: { 
+    '@vueuse/nuxt',
+  ],
+  imports: {
     // 自動import 不用import {useUser} from '~/stores/User'
-    dirs: ['stores', 'const', 'helper','composable', 'types'],
+    dirs: ['stores', 'const', 'helper', 'composable', 'types'],
   },
   css: [
     '@/assets/css/main.css',
@@ -22,12 +22,12 @@ export default defineNuxtConfig({
     },
   },
   build: {
-    transpile: ["@vuepic/vue-datepicker"],
+    transpile: ['@vuepic/vue-datepicker'],
   },
   runtimeConfig: {
-    mongoUrl: process.env.MONGO_URL
+    mongoUrl: process.env.MONGO_URL,
   },
-  nitro:{
-    plugins: ["~/server/index.ts"]
-  }
+  nitro: {
+    plugins: ['~/server/index.ts'],
+  },
 })
