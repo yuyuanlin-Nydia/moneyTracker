@@ -1,3 +1,11 @@
+<script lang="ts" setup>
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - MoneyTracker` : 'MoneyTracker'
+  },
+})
+</script>
+
 <template>
   <GlobalNavBar />
   <NuxtLayout>

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+useHead({
+  title: 'Log In',
+})
 const user = useUser()
 const query = ref<logInReq>({
   account: 'rdtest1153',

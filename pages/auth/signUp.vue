@@ -1,4 +1,7 @@
 <script setup lang="ts">
+useHead({
+  title: 'Sign Up',
+})
 const user = useUser()
 const query = ref<signUpReq>({
   userName: '',

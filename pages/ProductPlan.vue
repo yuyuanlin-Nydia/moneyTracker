@@ -1,5 +1,13 @@
 <script setup lang="ts">
-
+useHead({
+  title: 'Product Plan',
+  meta: [
+    { name: 'description', content: 'Your best choice for money-saving, record and analysis.' },
+    { property: 'og:description', content: 'Your best choice for money-saving, record and analysis.' },
+    { property: 'og:image', content: 'Your best choice for money-saving, record and analysis.' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+  ],
+})
 </script>
 
 <template>
