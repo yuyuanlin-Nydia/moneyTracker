@@ -14,7 +14,7 @@ user.getUser()
       </span>
     </NuxtLink>
     <div>
-      <NuxtLink v-slot="{ isActive }" to="/ProductPlan" title="Product Plan">
+      <NuxtLink v-slot="{ isActive }" to="/productPlan" title="Product Plan">
         <span class="mx-3 hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">Product Plan</span>
       </NuxtLink>
       <NuxtLink v-if="!isLoggedIn" v-slot="{ isActive }" class="mx-3" to="/auth/logIn" title="Log In">

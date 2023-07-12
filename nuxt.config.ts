@@ -30,4 +30,9 @@ export default defineNuxtConfig({
   nitro: {
     plugins: ['~/server/index.ts'],
   },
+  routeRules: {
+    '/': { prerender: true },
+    '/productPlan': { ssr: true },
+    '/user/**': { ssr: false },
+  },
 })
