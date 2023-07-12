@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
     const userData = await User.findByCredentials(body.account, body.password)
-    const user = await User.findOneAndUpdate(
+    const user = await User.findOne(
       { account: userData.account },
     )
     const token = await user!.generateAuthToken()
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (err: any) {
-    console.log(err.message)
+    console.error(err.message)
     return {
       success: false,
       error: {

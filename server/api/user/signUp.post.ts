@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (err: any) {
-    console.log(err)
+    console.error(err)
     if (err instanceof MongoServerError && err.code === 11000)
       err.message = 'Account already exists! Please change.'
 

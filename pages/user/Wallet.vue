@@ -11,7 +11,7 @@ const incomeTypeOption = ref(incomeCategory)
 const monthStart = dayjsTz().startOf('month').startOf('day').toDate()
 const monthEnd = dayjsTz().endOf('month').startOf('day').toDate()
 const query = ref<IWalletQuery>({
-  type: route.query.type as string || 'Expense',
+  type: (route.query.type as string) || 'Expense',
   category: [],
   date: [monthStart, monthEnd],
 })
@@ -19,12 +19,14 @@ const walletList = ref<getWalletRes[]>([])
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
 const sideDownCategory = ref<string[]>([])
-const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(null)
+const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(
+  null,
+)
 
 const categoryOption = computed(() => {
-  return (query.value.type === 'Expense'
+  return query.value.type === 'Expense'
     ? expenseTypeOption.value
-    : incomeTypeOption.value)
+    : incomeTypeOption.value
 })
 const totalAmount = computed(() => {
   let total = 0
@@ -35,12 +37,13 @@ const totalAmount = computed(() => {
   return total.toLocaleString()
 })
 
-watch(() => query.value.type, (newValue) => {
-  query.value.category = newValue === 'Expense'
-    ? expenseTypeOption.value
-    : incomeTypeOption.value
-},
-{ immediate: true },
+watch(
+  () => query.value.type,
+  (newValue) => {
+    query.value.category
+      = newValue === 'Expense' ? expenseTypeOption.value : incomeTypeOption.value
+  },
+  { immediate: true },
 )
 onMounted(async () => {
   dateRangeSelector.value?.selectDateRange('This month')
@@ -50,7 +53,10 @@ await fetchWallet()
 async function fetchWallet() {
   try {
     // to keep the category order the same all the time
-    const formatQuery = { ...query.value, category: query.value.category.sort() }
+    const formatQuery = {
+      ...query.value,
+      category: query.value.category.sort(),
+    }
     const result = await getWallet(formatQuery)
     walletList.value = result
     loading.value = true
@@ -69,14 +75,16 @@ function itemDateFormat(date: string) {
 
 async function dragEnd() {
   drag.value = false
-  const newDragList: Pick<IWalletItem, '_id' | 'category'>[] = walletList.value.map((categoryItem) => {
-    return categoryItem.list.map((item) => {
-      return {
-        _id: item._id,
-        category: categoryItem._id,
-      }
+  const newDragList: Pick<IWalletItem, '_id' | 'category'>[] = walletList.value
+    .map((categoryItem) => {
+      return categoryItem.list.map((item) => {
+        return {
+          _id: item._id,
+          category: categoryItem._id,
+        }
+      })
     })
-  }).flat()
+    .flat()
 
   const result = await editSingleWalletCategory(newDragList)
   if (result.success) {
@@ -97,35 +105,28 @@ function toggleSlide(_id: string) {
 
 function amountHTML(item: IWalletItem) {
   return item.type === 'Expense'
-    ? `<span class="mx-2 text-red-400">-${item.amount.toLocaleString()}</span>`
-    : `<span class="mx-2 text-blue-400">+${item.amount.toLocaleString()}</span>`
+    ? `<span class="mx-2 text-red-400">-${item.amount?.toLocaleString()}</span>`
+    : `<span class="mx-2 text-blue-400">+${item.amount?.toLocaleString()}</span>`
 }
 
 // Add Dialog
 function openAddDialog() {
-  $dialog
-    .open(
-      WalletDialog,
-      { title: 'Add' },
-    )
-    .onOk(async (data) => {
-      const result = await addSingleWallet(data)
-      if (result.success) {
-        await fetchWallet()
-        $toast.success('Add successfully!')
-      }
-    })
+  $dialog.open(WalletDialog, { title: 'Add' }).onOk(async (data) => {
+    const result = await addSingleWallet(data)
+    if (result.success) {
+      await fetchWallet()
+      $toast.success('Add successfully!')
+    }
+  })
 }
 
 // Edit Dialog
 function openEditDialog(walletItem: IWalletItem) {
   $dialog
-    .open(
-      WalletDialog, {
-        title: 'Edit',
-        walletItem: { ...walletItem },
-      },
-    )
+    .open(WalletDialog, {
+      title: 'Edit',
+      walletItem: { ...walletItem },
+    })
     .onOk(async (data) => {
       const result = await editSingleWallet(data)
       if (result.success) {
@@ -205,14 +206,18 @@ function openDeleteDialog(data: IWalletItem) {
       <li v-for="{ list, _id, total } in walletList" :key="_id" class="bg-primary-100 rounded-lg p-3 mb-3">
         <div class="text-xl font-bold mb-2">
           <Icon
-            :name="sideDownCategory.includes(_id) ? 'ic:sharp-minus' : 'ic:sharp-plus'" class="inline-block align-middle rounded text-2xl mr-2"
-            :class="[list.length ? 'bg-secondary-100 cursor-pointer' : 'bg-gray-300']" @click="toggleSlide(_id)"
+            class="inline-block align-middle rounded text-2xl mr-2" :name="sideDownCategory.includes(_id)
+              ? 'ic:sharp-minus'
+              : 'ic:sharp-plus'
+            " :class="[
+              list.length ? 'bg-secondary-100 cursor-pointer' : 'bg-gray-300',
+            ]" @click="toggleSlide(_id)"
           />
           <span>{{ _id }} ${{ total.toLocaleString() }}</span>
         </div>
         <draggable
-          :list="list" item-key="_id" :sort="false" ghost-class="ghost" chosen-class="drag-chosen" animation="300"
-          tag="ul" group="wallet" handle=".moveIcon" @start="drag = true" @end="dragEnd"
+          :list="list" item-key="_id" :sort="false" ghost-class="ghost" chosen-class="drag-chosen"
+          animation="300" tag="ul" group="wallet" handle=".moveIcon" @start="drag = true" @end="dragEnd"
         >
           <template #item="{ element }">
             <li

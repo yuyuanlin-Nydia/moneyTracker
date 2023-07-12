@@ -7,7 +7,7 @@ const useApi = function (url: string, body: Record<string, any> = {}): Promise<a
     body,
     credentials: 'include',
     watch: false,
-    onResponseError({ request, response }) {
+    onResponseError({ response }) {
       // 處理請求回應發生的錯誤
       console.error(response)
     },
@@ -67,7 +67,7 @@ export function addSingleWallet(query: IWalletItem) {
 }
 
 export function editSingleWallet(query: IWalletItem) {
-  return useApi('/wallet/edit', query)
+  return useApi('/wallet/editOne', query)
 }
 
 export function editSingleWalletCategory(query: Pick<IWalletItem, '_id' | 'category'>[]) {

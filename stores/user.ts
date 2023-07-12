@@ -14,6 +14,7 @@ export const useUser = defineStore('user', {
         token.value = message.token
         setToken(message.token)
         this.isLoggedIn = true
+        this.userInfo = message.user
         useRouter().push('/user/overview')
       }
     },
@@ -24,6 +25,7 @@ export const useUser = defineStore('user', {
         token.value = message.token
         setToken(message.token)
         this.isLoggedIn = true
+        this.userInfo = message.user
         useRouter().push('/user/overview')
       }
     },
