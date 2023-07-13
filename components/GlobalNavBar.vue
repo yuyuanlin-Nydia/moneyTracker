@@ -6,7 +6,6 @@ const { isLoggedIn, userInfo } = storeToRefs(user)
 const route = useRoute()
 
 user.getUser()
-
 function setColorMode() {
   $colorMode.preference = $colorMode.preference === 'light'
     ? 'dark'

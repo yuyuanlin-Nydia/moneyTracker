@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-
+const colorMode = useColorMode()
 </script>
 
 <template>
@@ -71,13 +71,13 @@
       </p>
       <div class="columns-3">
         <div class="md:h-72 lg:h-[420px] border border-secondary-100 dark:border-white rounded-md p-3">
-          <img class="w-full" src="../assets/snapshot/Overview.png" alt="Overview">
-        </div>
-        <div class="md:h-72 lg:h-[420px] border  border-secondary-100 dark:border-white rounded-md p-3">
-          <img class="w-full" src="../assets/snapshot/Wallet.png" alt="Wallet">
+          <img class="w-full" src="/snapshot/Overview-dark.png" alt="Overview">
         </div>
         <div class="md:h-72 lg:h-[420px] border border-secondary-100 dark:border-white rounded-md p-3">
-          <img class="w-full" src="../assets/snapshot/Analysis.png" alt="Analysis">
+          <img class="w-full" src="/snapshot/Wallet-dark.png" alt="Overview">
+        </div>
+        <div class="md:h-72 lg:h-[420px] border border-secondary-100 dark:border-white rounded-md p-3">
+          <img class="w-full" src="/snapshot/Analysis-dark.png" alt="Analysis">
         </div>
       </div>
     </div>
