@@ -1,14 +1,23 @@
 <script lang="ts" setup>
-const user = useUser()
+const user = useUserStore()
+const app = useNuxtApp()
+const { $colorMode } = app
 const { isLoggedIn, userInfo } = storeToRefs(user)
+const route = useRoute()
 
 user.getUser()
+
+function setColorMode() {
+  $colorMode.preference = $colorMode.preference === 'light'
+    ? 'dark'
+    : 'light'
+}
 </script>
 
 <template>
-  <nav class="bg-primary-200 h-[4rem] text-gray-500 font-bold px-3 flex justify-between items-center text-xl">
+  <nav class="bg-primary-100 h-[4rem] text-gray-500 font-bold px-3 flex justify-between items-center text-xl">
     <NuxtLink to="/" class=" font-bold text-primary-500">
-      <Icon name="solar:chat-round-money-bold" class="text-4xl rounded bg-primary-200 md:text-xl" />
+      <Icon name="solar:chat-round-money-bold" class="text-4xl rounded bg-primary-100 md:text-xl" />
       <span class="align-middle">
         MoneyTracker
       </span>
@@ -23,10 +32,15 @@ user.getUser()
       <NuxtLink v-if="!isLoggedIn" v-slot="{ isActive }" class="mx-3" to="/auth/signUp" title="Sign Up">
         <span class="hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">Sign up</span>
       </NuxtLink>
-      <NuxtLink v-if="isLoggedIn" v-slot="{ isActive }" class="mx-3" to="/user/overview" title="Account">
-        <span class="hover:underline" :class="[isActive ? 'text-black' : 'hover:text-gray-500']">{{ userInfo.userName }}'s
+      <NuxtLink v-if="isLoggedIn" class="mx-3" to="/user/overview" title="Dashboard">
+        <span class="hover:underline" :class="[route.path.includes('user') ? 'text-black' : 'hover:text-gray-500']">{{ userInfo.userName }}'s
           dashboard</span>
       </NuxtLink>
+      <Icon
+        class="cursor-pointer hover:text-gray-200 align-text-top"
+        :name="$colorMode.preference === 'light' ? 'material-symbols:light-mode' : 'material-symbols:dark-mode'"
+        @click="setColorMode"
+      />
     </div>
   </nav>
 </template>

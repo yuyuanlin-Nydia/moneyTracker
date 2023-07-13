@@ -1,5 +1,5 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-  const user = useUser()
+export default defineNuxtRouteMiddleware(() => {
+  const user = useUserStore()
   const { isLoggedIn } = storeToRefs(user)
   const token = useCookie('token')
   if (token.value)

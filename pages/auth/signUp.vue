@@ -2,7 +2,7 @@
 useHead({
   title: 'Sign Up',
 })
-const user = useUser()
+const user = useUserStore()
 const query = ref<signUpReq>({
   userName: '',
   account: '',

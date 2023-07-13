@@ -12,7 +12,7 @@ const rateStyle = {
     return 'bg-red-100 text-red-500'
   },
   Balance() {
-    return 'bg-black text-white'
+    return 'bg-white text-black dark:bg-black dark:text-white'
   },
 }
 
@@ -38,14 +38,14 @@ function getIcon(rate: string) {
 </script>
 
 <template>
-  <div v-if="props.item" class="rounded-md border-secondary-100 border bg-primary-400 mb-5 basis-[48%]">
+  <div v-if="props.item" class="rounded-md border-secondary-100 border  bg-primary-100 dark:bg-primary-400 mb-5 basis-[48%]">
     <div class="font-bold text-2xl  border-secondary-100 border-b p-2">
       {{ props.item.type }}
     </div>
     <div class="p-2 flex justify-between items-start">
       <div class="mr-6">
         <span class="text-xl font-bold">$ {{ props.item.total.toLocaleString() }}</span> <br>
-        <span class="text-gray-400 text-xs">THIS MONTH</span>
+        <span class="text-gray-700 dark:text-gray-400 text-xs">THIS MONTH</span>
       </div>
       <div class="flex">
         <div class="rounded-lg p-1 mr-2 min-w-[140px] text-center" :class="[getRateStyle(props.item.MoM)]">

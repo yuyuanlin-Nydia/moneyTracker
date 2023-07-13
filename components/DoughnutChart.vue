@@ -43,7 +43,7 @@ const options = {
     },
     legend: {
       labels: {
-        color: 'lightgray',
+        color: 'gray',
         position: 'top',
       },
     },

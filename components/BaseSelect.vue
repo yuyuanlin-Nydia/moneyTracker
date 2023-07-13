@@ -15,7 +15,7 @@ function updateSelect(e: Event) {
 
 <template>
   <select
-    :class="['text-black', 'w-56', 'p-1', 'rounded'].concat(customClass)"
+    :class="['text-black', 'w-56', 'p-1', 'rounded', 'border border-gray-300'].concat(customClass)"
     @change="updateSelect"
   >
     <option

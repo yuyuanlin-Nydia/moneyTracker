@@ -6,14 +6,14 @@ defineProps<{
 </script>
 
 <template>
-  <div class="card bg-primary-500 w-full h-[38vh]">
+  <div class="card bg-primary-100 dark:bg-primary-500 w-full h-[38vh]">
     <div class="flex items-center justify-between mb-1">
       <h3 class="text-2xl font-bold">
         {{ title }}
       </h3>
       <NuxtLink
         :to="`/user/wallet?type=${title}`"
-        class="btn text-gray-400 hover:bg-primary-200 hover:text-white transition ease-out duration-1000"
+        class="btn dark:text-gray-400 hover:bg-primary-200 hover:text-gray-300 hover:dark:text-white transition ease-out duration-1000"
       >
         View Wallet
       </NuxtLink>
@@ -36,7 +36,7 @@ defineProps<{
       </ul>
     </template>
     <template v-else>
-      <div class="text-gray-300 center h-3/4">
+      <div class="dark:text-gray-300 center h-3/4">
         There is no record yet!
       </div>
     </template>

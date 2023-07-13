@@ -23,6 +23,7 @@ export default defineComponent({
       default: 'Save',
     },
   },
+  emits: ['cancel', 'confirm'],
   setup(props) {
     const { proxy } = getCurrentInstance()!
     const isShow = ref(true)
@@ -74,7 +75,7 @@ export default defineComponent({
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md max-h-[75vh] transform overflow-y-auto rounded-2xl bg-primary-500 text-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md max-h-[75vh] transform overflow-y-auto rounded-2xl bg-white dark:bg-primary-500 dark:text-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
@@ -84,7 +85,7 @@ export default defineComponent({
               </DialogTitle>
 
               <div class="my-5">
-                <p class="text-sm text-gray-200">
+                <p class="text-sm dark:text-gray-200">
                   <slot name="content" />
                 </p>
               </div>

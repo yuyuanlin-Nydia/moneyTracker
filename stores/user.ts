@@ -1,4 +1,4 @@
-export const useUser = defineStore('user', {
+export const useUserStore = defineStore('user', {
   state: () => {
     return {
       isLoggedIn: false,
@@ -48,4 +48,4 @@ export const useUser = defineStore('user', {
 })
 
 if (import.meta.hot)
-  import.meta.hot.accept(acceptHMRUpdate(useUser, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

@@ -16,7 +16,7 @@ useHead({
       Product Plan
     </p>
     <table class="text-2xl w-full lg:w-9/12 text-center">
-      <thead class="text-3xl text-primary-200 border-b-2 border-secondary-100">
+      <thead class="text-3xl text-primary-200 dark:text-primary-100 border-b-2 border-secondary-100">
         <tr>
           <td />
           <td>Free</td>
@@ -75,7 +75,7 @@ useHead({
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 table {
   tbody {
     td:nth-child(1) {

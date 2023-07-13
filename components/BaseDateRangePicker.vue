@@ -54,14 +54,14 @@ function selectDateRange(rangeTag: string) {
 
 <template>
   <VueDatePicker
-    ref="datePicker" v-model="date" auto-apply format="yyyy-MM-dd" :enable-time-picker="false" range
+    v-model="date" auto-apply format="yyyy-MM-dd" :enable-time-picker="false" range
     @update:model-value="dateRangeTextBtn = ''"
   />
   <div v-if="showBtn" class="mt-4">
     <button
       v-for="dateRange in btnToShow" :key="dateRange" class="btn border text-sm mr-2" :class="[dateRangeTextBtn === dateRange
-        ? 'border-gray-100 text-gray-100'
-        : 'border-gray-400 text-gray-400']" @click="selectDateRange(dateRange)"
+        ? 'border-primary-200 dark:border-gray-100 text-primary-200 dark:text-gray-100'
+        : 'border-primary-100 dark:border-gray-400 text-primary-100 dark:text-gray-400']" @click="selectDateRange(dateRange)"
     >
       {{ dateRange }}
     </button>

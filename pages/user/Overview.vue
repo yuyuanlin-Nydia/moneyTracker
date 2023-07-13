@@ -15,7 +15,7 @@ walletTotalAmount.value = await getWalletTotalAmount()
 <template>
   <div class="w-full flex flex-row gap-6 mb-4">
     <div class="flex flex-col basis-3/4 ">
-      <div class="card w-full bg-primary-500">
+      <div class="card w-full bg-primary-100 dark:bg-primary-500">
         <!-- Analysis -->
         <div class="flex justify-between items-center">
           <div class="text-2xl font-bold">
@@ -32,7 +32,7 @@ walletTotalAmount.value = await getWalletTotalAmount()
             <div v-if="chartData" class="sm:w-[100%] md:w-[70%]">
               <DoughnutChart title="Doughnut Chart For This Month" :chart-data="chartData" />
             </div>
-            <p v-else class="text-xl text-gray-300 center w-full">
+            <p v-else class="text-xl dark:text-gray-300 center w-full">
               No data exists!
             </p>
           </div>
@@ -40,7 +40,7 @@ walletTotalAmount.value = await getWalletTotalAmount()
             <div class="mb-4">
               <BaseSelect v-model="type" :list="WalletType" :custom-class="['w-full']" />
             </div>
-            <div v-for="item in walletTotalAmount" :key="item._id" class="center p-2 bg-info-500 rounded-xl mb-3">
+            <div v-for="item in walletTotalAmount" :key="item._id" class="center p-2 text-gray-300 bg-primary-200 dark:bg-info-500 rounded-xl mb-3">
               <icon
                 class="text-5xl font-extrabold mr-3 text-secondary-100"
                 :name="item._id === 'Income' ? 'ic:sharp-plus' : 'ic:sharp-minus'"
@@ -59,10 +59,10 @@ walletTotalAmount.value = await getWalletTotalAmount()
         <OverviewLatestWalletCard title="Latest Expense" :list="latestWallet.expense" />
       </div>
     </div>
-    <div class="flex-col-8 basis-1/4 bg-primary-500 card">
-      <div class="fixed animate-bounce hover:animate-none top-[40%] h-40 w-[18%]">
-        <div class="relative bg-primary-700 rounded-md p-4 flex justify-end flex-col h-48">
-          <img src="/upgrade.png" class="w-[65%] block absolute left-[50%] translate-x-[-50%] top-[-50%]" alt="upgrade">
+    <div class="bg-primary-100  dark:bg-primary-500 relative rounded-xl flex justify-center">
+      <div class="sticky animate-bounce hover:animate-none top-[45%] h-32 w-[80%]">
+        <div class="relative bg-primary-200 rounded-md p-4 flex justify-end flex-col sm:pt-8 md:pt-16">
+          <img src="/upgrade.png" class="sm:w-[5rem] md:w-[7rem] block absolute left-[50%] translate-x-[-50%] top-[-30%]" alt="upgrade">
           <p class="text-gray-300 text-center mb-3">
             Unlock more features using
             <span class="font-bold text-lg">Pro</span>

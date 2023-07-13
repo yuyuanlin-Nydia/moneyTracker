@@ -7,12 +7,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <p class="text-2xl bg-primary-400 mb-4">
+  <p class="text-2xl text-white mb-4">
     Top 5
   </p>
-  <table v-if="items?.length" class="w-full">
+  <table v-if="items?.length" class="w-full text-center">
     <thead>
-      <tr class="text-left text-gray-400">
+      <tr class="text-gray-200 dark:text-gray-400">
         <th>Rank</th>
         <th>Category</th>
         <th>Item</th>
@@ -21,7 +21,11 @@ const props = defineProps({
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(item, idx) in props.items" class="border-b border-primary-100">
+      <tr
+        v-for="(item, idx) in props.items"
+        :key="item._id"
+        class="border-b border-secondary-100 dark:border-secondary-100 font-bold"
+      >
         <td class="text-2xl text-secondary-100">
           {{ idx + 1 }}
         </td>

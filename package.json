@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@antfu/eslint-config": "^0.39.7",
+    "@nuxtjs/color-mode": "^3.3.0",
     "@pinia/nuxt": "^0.4.9",
     "@vuepic/vue-datepicker": "^5.0.1",
     "@vueuse/nuxt": "^10.1.2",

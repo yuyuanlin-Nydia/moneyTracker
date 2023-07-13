@@ -25,12 +25,12 @@ definePageMeta({
   <div class="grid grid-cols-5 h-full">
     <div class="col-span-2 flex flex-col justify-center items-center w-64 justify-self-center">
       <TabGroup>
-        <TabList class="border border-primary-100 text-2xl mb-5">
+        <TabList class="border border-primary-200 text-2xl mb-5">
           <Tab>
             <NuxtLink v-slot="{ isActive }" to="/auth/logIn" title="Sign Up">
               <span
                 class="px-4 py-2  inline-block"
-                :class="{ 'bg-primary-100 text-white': isActive, 'bg-white text-primary-100': !isActive }"
+                :class="{ 'bg-primary-200 text-white': isActive, 'bg-white text-primary-200': !isActive }"
               >
                 Log In
               </span>
@@ -40,7 +40,7 @@ definePageMeta({
             <NuxtLink v-slot="{ isActive }" to="/auth/signUp" title="Sign Up">
               <span
                 class="px-4 py-2  inline-block"
-                :class="{ 'bg-primary-100 text-white': isActive, 'bg-white text-primary-100': !isActive }"
+                :class="{ 'bg-primary-200 text-white': isActive, 'bg-white text-primary-200': !isActive }"
               >
                 Sign Up
               </span>
@@ -58,7 +58,7 @@ definePageMeta({
         </TransitionRoot>
       </div>
     </div>
-    <div class="bg-primary-100 col-span-3 h-full flex flex-col justify-center px-20">
+    <div class="bg-primary-200 col-span-3 h-full flex flex-col justify-center px-20">
       <h1 class="text-secondary-200 font-bold text-center text-6xl">
         Money Tracker
       </h1>

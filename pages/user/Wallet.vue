@@ -199,18 +199,18 @@ function openDeleteDialog(data: IWalletItem) {
     <Loading :show="loading" />
   </div>
   <div v-else-if="walletList.length">
-    <div class="text-gray-100 text-lg font-bold">
+    <div class="dark:text-gray-100 text-lg font-bold">
       TOTAL: NT${{ totalAmount }}
     </div>
     <ul>
-      <li v-for="{ list, _id, total } in walletList" :key="_id" class="bg-primary-100 rounded-lg p-3 mb-3">
+      <li v-for="{ list, _id, total } in walletList" :key="_id" class="bg-primary-100 dark:bg-primary-200 rounded-lg p-3 mb-3">
         <div class="text-xl font-bold mb-2">
           <Icon
-            class="inline-block align-middle rounded text-2xl mr-2" :name="sideDownCategory.includes(_id)
+            class="inline-block align-middle rounded text-2xl mr-2 bg-gray-300" :name="sideDownCategory.includes(_id)
               ? 'ic:sharp-minus'
               : 'ic:sharp-plus'
             " :class="[
-              list.length ? 'bg-secondary-100 cursor-pointer' : 'bg-gray-300',
+              list.length ? 'cursor-pointer' : '',
             ]" @click="toggleSlide(_id)"
           />
           <span>{{ _id }} ${{ total.toLocaleString() }}</span>
@@ -222,7 +222,7 @@ function openDeleteDialog(data: IWalletItem) {
           <template #item="{ element }">
             <li
               v-show="sideDownCategory.includes(_id)"
-              class="flex justify-between bg-primary-500 p-2 border-b border-secondary-100"
+              class="flex justify-between text-gray-200 bg-primary-200 dark:bg-primary-500 p-2 border-b border-secondary-100"
             >
               <div>
                 <Icon

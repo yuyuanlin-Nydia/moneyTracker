@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     'nuxt-icon',
     'nuxt-headlessui',
     '@vueuse/nuxt',
+    '@nuxtjs/color-mode',
   ],
   imports: {
     // 自動import 不用import {useUser} from '~/stores/User'
@@ -34,5 +35,8 @@ export default defineNuxtConfig({
     '/': { prerender: true },
     '/productPlan': { ssr: true },
     '/user/**': { ssr: false },
+  },
+  colorMode: {
+    classSuffix: '',
   },
 })

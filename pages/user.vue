@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const user = useUser()
+const user = useUserStore()
 useHead({
   title: `${user.userInfo.userName}\'s Dashboard`,
 })

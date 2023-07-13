@@ -2,39 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .btn{
-    @apply rounded py-2 px-3 cursor-pointer tracking-wider
+  @apply rounded py-2 px-3 cursor-pointer tracking-wider
 }
 
 .btn-primary{
-    @apply rounded py-1 px-3 cursor-pointer tracking-wider bg-secondary-100 text-white border-2 border-secondary-100 hover:text-secondary-100 hover:border-secondary-100 hover:bg-transparent transition ease-out duration-500
+  @apply rounded py-1 px-3 cursor-pointer tracking-wider bg-secondary-100 text-white border-2 border-secondary-100 hover:text-secondary-100 hover:border-secondary-100 hover:bg-transparent transition ease-out duration-500
 }
 
 .card{
-    @apply rounded-xl overflow-hidden p-3
+  @apply rounded-xl overflow-hidden p-3
 }
 
 .center{
-    @apply flex justify-center items-center
+  @apply flex justify-center items-center
 }
 
 .modal-mask {
-    @apply flex justify-center items-center absolute top-0.5 z-10 w-full h-screen bg-blackOpacity-100 transition ease-out duration-500
+  @apply flex justify-center items-center absolute top-0.5 z-10 w-full h-screen bg-blackOpacity-100 transition ease-out duration-500
 }
 
 .details{
-    @apply font-light text-sm text-gray-400
+  @apply font-light text-sm dark:text-gray-400
 }
 
 .input{
-    @apply rounded border border-gray-400 p-1 text-black
+  @apply rounded border border-gray-400 p-1 text-black
 }
 
 .authInput{
-    @apply block bg-gray-100 py-1 px-2 border-2 focus:outline-none focus:bg-white focus:ring-1 focus:border-primary-100  focus:ring-primary-200 rounded w-full
+  @apply block text-black bg-gray-100 dark:bg-gray-100 py-1 px-2 border focus:outline-none focus:bg-white focus:dark:bg-white focus:ring-1 focus:border-primary-200  focus:ring-primary-100 rounded w-full
 }
 
 .drag-chosen{
-    @apply bg-primary-400 rounded p-1
+  @apply bg-primary-200 dark:bg-primary-400 rounded p-1
 }

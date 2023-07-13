@@ -2,7 +2,7 @@
 useHead({
   title: 'Log In',
 })
-const user = useUser()
+const user = useUserStore()
 const query = ref<logInReq>({
   account: 'rdtest1153',
   password: 'rdtest1153',
