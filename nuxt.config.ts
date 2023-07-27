@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   ],
   imports: {
     // 自動import 不用import {useUser} from '~/stores/User'
-    dirs: ['stores', 'const', 'helper', 'composable', 'types'],
+    dirs: ['stores', 'const', 'helper', 'types'],
   },
   css: [
     '@/assets/css/main.css',
