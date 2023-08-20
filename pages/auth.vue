@@ -48,7 +48,7 @@ definePageMeta({
           </Tab>
         </TabList>
       </TabGroup>
-      <div class="h-1/2">
+      <div class="h-1/2 w-[80%]">
         <TransitionRoot
           :show="isTransition" enter="transition-all duration-75" enter-from="-translate-x-10 opacity-0"
           enter-to="translate-x-0 opacity-100 " leave="transition-translate transition-opacity duration-150"

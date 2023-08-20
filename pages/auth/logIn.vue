@@ -3,24 +3,38 @@ useHead({
   title: 'Log In',
 })
 const user = useUserStore()
-const query = ref<logInReq>({
-  account: 'rdtest1153',
-  password: 'rdtest1153',
-})
 </script>
 
 <template>
-  <form class="w-full" @submit.prevent="user.logIn(query)">
-    <label class="block w-full mt-6">
-      Account
-      <input v-model="query.account" class="authInput" type="text">
-    </label>
-    <label class="block mt-3">
-      Password
-      <input v-model="query.password" class="authInput" type="password">
-    </label>
-    <button class="btn mt-8 bg-secondary-100 text-white w-full">
-      Log in
-    </button>
-  </form>
+  <FormKit
+    type="form"
+    submit-label="Log in"
+    :submit-attrs="{
+      inputClass: 'w-full mt-6',
+    }"
+    @submit="user.logIn"
+  >
+    <FormKit
+      type="text"
+      name="account"
+      label="Account"
+      wrapper-class="$reset block"
+      input-class="$reset authInput"
+      inner-class="$reset"
+      label-class="mt-3 mb-1"
+      validation="required|alphanumeric|length:6,16"
+      value="rdtest1153"
+    />
+    <FormKit
+      type="password"
+      name="password"
+      label="Password"
+      wrapper-class="$reset block"
+      input-class="$reset authInput"
+      inner-class="$reset"
+      label-class="mb-1"
+      validation="required|alphanumeric|length:6,16"
+      value="rdtest1153"
+    />
+  </FormKit>
 </template>

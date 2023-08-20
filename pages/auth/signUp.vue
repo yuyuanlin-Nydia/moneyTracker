@@ -3,29 +3,46 @@ useHead({
   title: 'Sign Up',
 })
 const user = useUserStore()
-const query = ref<signUpReq>({
-  userName: '',
-  account: '',
-  password: '',
-})
 </script>
 
 <template>
-  <form class="w-full" @submit.prevent="user.signUp(query)">
-    <label class="block w-full mt-6">
-      User Name
-      <input v-model="query.userName" class="authInput" type="text">
-    </label>
-    <label class="block w-full mt-3">
-      Account
-      <input v-model="query.account" class="authInput" type="text">
-    </label>
-    <label class="block mt-3">
-      Password
-      <input v-model="query.password" class="authInput" type="password">
-    </label>
-    <button class="btn mt-8 bg-secondary-100 text-white w-full">
-      Sign up
-    </button>
-  </form>
+  <FormKit
+    type="form"
+    submit-label="Sign up"
+    :submit-attrs="{
+      inputClass: 'w-full mt-6',
+    }"
+    @submit="user.signUp"
+  >
+    <FormKit
+      type="text"
+      name="userName"
+      label="User Name"
+      wrapper-class="$reset block"
+      input-class="$reset authInput"
+      inner-class="$reset "
+      label-class="mt-3 mb-1"
+      validation="required|alphanumeric|length:6,16"
+    />
+    <FormKit
+      type="text"
+      name="account"
+      label="Account"
+      wrapper-class="$reset block"
+      input-class="$reset authInput"
+      inner-class="$reset "
+      label-class="mb-1"
+      validation="required|alphanumeric|length:6,16"
+    />
+    <FormKit
+      type="password"
+      name="password"
+      label="Password"
+      wrapper-class="$reset block"
+      input-class="$reset authInput"
+      inner-class="$reset "
+      label-class="mb-1"
+      validation="required|alphanumeric|length:6,16"
+    />
+  </FormKit>
 </template>

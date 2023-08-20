@@ -31,9 +31,13 @@
 }
 
 .authInput{
-  @apply block text-black bg-gray-100 dark:bg-gray-100 py-1 px-2 border focus:outline-none focus:bg-white focus:dark:bg-white focus:ring-1 focus:border-primary-200  focus:ring-primary-100 rounded w-full
+  @apply block text-black bg-gray-100 dark:bg-gray-100 p-2 border focus:outline-none focus:bg-white focus:dark:bg-white focus:border-primary-200  rounded w-full
 }
 
 .drag-chosen{
   @apply bg-primary-200 dark:bg-primary-400 rounded p-1
+}
+
+.formkit-options > li{
+  display: inline-block;
 }

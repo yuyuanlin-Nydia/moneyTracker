@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     'nuxt-headlessui',
     '@vueuse/nuxt',
     '@nuxtjs/color-mode',
+    '@formkit/nuxt',
   ],
   imports: {
     // 自動import 不用import {useUser} from '~/stores/User'
@@ -41,4 +42,9 @@ export default defineNuxtConfig({
     preference: 'dark',
     fallback: 'dark',
   },
+  // vue: {
+  //   compilerOptions: {
+  //     isCustomElement: tag => ['FormKit'].includes(tag),
+  //   },
+  // },
 })

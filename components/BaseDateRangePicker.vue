@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import type { FormKitFrameworkContext } from '@formkit/core'
 
 type IBtnText = 'This month' | 'This week' | 'Today'
 
 const props = withDefaults(defineProps<{
-  modelValue: Date[]
   showBtn?: boolean
   btnToShow?: IBtnText[]
+  context: FormKitFrameworkContext
 }>(), {
   showBtn: true,
   btnToShow: () => ['This month', 'This week', 'Today'],
@@ -20,7 +21,7 @@ const dateRangeTextBtn = ref<string>('')
 
 const date = computed({
   get() {
-    return props.modelValue
+    return props.context._value
   },
   set(newValue) {
     emits('update:modelValue', newValue)
@@ -48,22 +49,31 @@ function selectDateRange(rangeTag: string) {
       break
   }
   date.value = [startDate, endDate]
-  emits('update:modelValue', [startDate, endDate])
+  emits('update:modelValue', props.context.node.input([startDate, endDate]))
 }
 </script>
 
 <template>
-  <VueDatePicker
-    v-model="date" auto-apply format="yyyy-MM-dd" :enable-time-picker="false" range
-    @update:model-value="dateRangeTextBtn = ''"
-  />
-  <div v-if="showBtn" class="mt-4">
-    <button
-      v-for="dateRange in btnToShow" :key="dateRange" class="btn border text-sm mr-2" :class="[dateRangeTextBtn === dateRange
-        ? 'border-primary-200 dark:border-gray-100 text-primary-200 dark:text-gray-100'
-        : 'border-primary-100 dark:border-gray-400 text-primary-100 dark:text-gray-400']" @click="selectDateRange(dateRange)"
-    >
-      {{ dateRange }}
-    </button>
+  <div>
+    <VueDatePicker
+      v-bind="context.attrs" :id="context.id" :model-value="date" auto-apply format="yyyy-MM-dd" :enable-time-picker="false"
+      range :name="context.node.name" :disabled="context.disabled" class="baseDateRangePicker" :class="[...context.classes.input]" @update:model-value="context.node.input($event);dateRangeTextBtn = ''"
+      @blur="context.handlers.blurs"
+    />
+    <div v-if="showBtn" class="mt-4">
+      <button
+        v-for="dateRange in btnToShow" :key="dateRange" class="btn border text-sm mr-2" :class="[dateRangeTextBtn === dateRange
+          ? 'border-primary-200 dark:border-gray-100 text-primary-200 dark:text-gray-100'
+          : 'border-primary-100 dark:border-gray-400 text-primary-100 dark:text-gray-400']" @click.prevent="selectDateRange(dateRange)"
+      >
+        {{ dateRange }}
+      </button>
+    </div>
   </div>
 </template>
+
+<style>
+.formkit-input .multiselect {
+  padding: 0
+}
+</style>

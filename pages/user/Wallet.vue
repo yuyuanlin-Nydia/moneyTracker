@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { createInput } from '@formkit/vue'
+import { getNode } from '@formkit/core'
 import DefaultDialog from '~/components/DefaultDialog.vue'
 import WalletDialog from '~/components/WalletDialog.vue'
 import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
@@ -15,6 +17,11 @@ const query = ref<IWalletQuery>({
   category: [],
   date: [monthStart, monthEnd],
 })
+const initialValue = {
+  type: (route.query.type as string) || 'Expense',
+  category: [],
+  date: [monthStart, monthEnd],
+}
 const walletList = ref<getWalletRes[]>([])
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
@@ -22,12 +29,14 @@ const sideDownCategory = ref<string[]>([])
 const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(
   null,
 )
+const baseDateRangePicker = createInput(BaseDateRangePicker)
 
 const categoryOption = computed(() => {
   return query.value.type === 'Expense'
     ? expenseTypeOption.value
     : incomeTypeOption.value
 })
+
 const totalAmount = computed(() => {
   let total = 0
   walletList.value.forEach((item) => {
@@ -45,17 +54,37 @@ watch(
   },
   { immediate: true },
 )
-onMounted(async () => {
+
+onMounted(() => {
+  castTypeOnCategory()
   dateRangeSelector.value?.selectDateRange('This month')
 })
-await fetchWallet()
 
-async function fetchWallet() {
+nextTick(async () => {
+  await fetchWallet(getNode('walletForm')!.value as IWalletQuery)
+})
+
+function castTypeOnCategory() {
+  const typeNode = getNode('type')
+  const categoryNode = getNode('category')
+  const options = typeNode?._value === 'Expense' ? expenseCategoryOptions : incomeCategoryOptions
+
+  categoryNode!.context!.options = options
+
+  typeNode!.on('commit', ({ payload }) => {
+    const options = payload === 'Expense' ? expenseCategoryOptions : incomeCategoryOptions
+
+    categoryNode!.context!.options = options
+  })
+}
+
+async function fetchWallet(data: IWalletQuery) {
   try {
+    const query = getNode('walletForm')!.value as IWalletQuery
     // to keep the category order the same all the time
     const formatQuery = {
-      ...query.value,
-      category: query.value.category.sort(),
+      ...data,
+      category: toRaw(query.category).sort(),
     }
     const result = await getWallet(formatQuery)
     walletList.value = result
@@ -88,7 +117,8 @@ async function dragEnd() {
 
   const result = await editSingleWalletCategory(newDragList)
   if (result.success) {
-    await fetchWallet()
+    const query = getNode('walletForm')!.value as IWalletQuery
+    await fetchWallet(query)
     $toast.success('Edit category successfully!')
   }
 }
@@ -114,7 +144,8 @@ function openAddDialog() {
   $dialog.open(WalletDialog, { title: 'Add' }).onOk(async (data) => {
     const result = await addSingleWallet(data)
     if (result.success) {
-      await fetchWallet()
+      const query = getNode('walletForm')!.value as IWalletQuery
+      await fetchWallet(query)
       $toast.success('Add successfully!')
     }
   })
@@ -130,7 +161,8 @@ function openEditDialog(walletItem: IWalletItem) {
     .onOk(async (data) => {
       const result = await editSingleWallet(data)
       if (result.success) {
-        walletList.value = await getWallet(query.value)
+        const query = getNode('walletForm')!.value as IWalletQuery
+        await fetchWallet(query)
         $toast.success('Edit successfully!')
       }
     })
@@ -148,7 +180,8 @@ function openDeleteDialog(data: IWalletItem) {
     .onOk(async (data) => {
       const result = await deleteSingleWallet(data._id)
       if (result.success) {
-        await fetchWallet()
+        const query = getNode('walletForm')!.value as IWalletQuery
+        await fetchWallet(query)
         $toast.success('Delete successfully!')
       }
     })
@@ -159,28 +192,45 @@ function openDeleteDialog(data: IWalletItem) {
   <div class="flex flex-row gap-4 border-b border-gray-500">
     <div class="basis-3/4">
       <div class="text-lg">
-        <div class="mb-2">
-          <span class="inline-block w-24">Type : </span>
-          <BaseSelect v-model="query.type" :list="walletTypeOption" />
-        </div>
-        <div class="mb-2">
-          <span class="inline-block w-24">Category : </span>
-          <div v-for="category in categoryOption" :key="category" class="inline mr-2">
-            <input :id="category" v-model="query.category" class="mr-1" type="checkbox" :value="category" checked>
-            <label :for="category">{{ category }}</label>
-          </div>
-        </div>
-        <div class="mb-2">
-          <span class="inline-block w-24 align-top">Date : </span>
-          <div class="inline-block w-80 p-1 mr-2">
-            <BaseDateRangePicker ref="dateRangeSelector" v-model="query.date" />
-          </div>
-        </div>
-      </div>
-      <div>
-        <button class="btn-primary my-4" @click="fetchWallet">
-          Search
-        </button>
+        <FormKit
+          id="walletForm"
+          v-model="query"
+          :value="initialValue"
+          type="form"
+          submit-label="Search"
+          @submit="fetchWallet"
+        >
+          <FormKit
+            id="type"
+            type="select"
+            name="type"
+            label="Type :"
+            :options="walletTypeOption"
+            inner-class="inline"
+            validation="required"
+          />
+          <FormKit
+            id="category"
+            v-model="query.category"
+            :options="categoryOption"
+            type="checkbox"
+            label="Category :"
+            name="category"
+            validation="required"
+            :sections-schema="{
+              legend: { $el: 'div' },
+            }"
+          />
+          <FormKit
+            :type="baseDateRangePicker"
+            label="Date :"
+            name="date"
+            validation="required"
+            wrapper-class="$remove:items-center items-start"
+            inner-class="$remove:formkit-inner"
+            prefix-icon="email"
+          />
+        </FormKit>
       </div>
     </div>
     <div class="basis-1/4">
