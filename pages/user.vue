@@ -6,6 +6,7 @@ useHead({
 definePageMeta({
   middleware: ['auth'],
   layout: 'admin',
+  keepalive: true,
 })
 </script>
 
