@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { createInput } from '@formkit/vue'
 import { getNode } from '@formkit/core'
 import DefaultDialog from '~/components/DefaultDialog.vue'
 import WalletDialog from '~/components/WalletDialog.vue'
-import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
 
 const { $dialog, $toast } = useNuxtApp()
 const route = useRoute()
@@ -26,12 +24,12 @@ const walletList = ref<getWalletRes[]>([])
 const loading = ref<boolean>(false)
 const drag = ref<boolean>(false)
 const sideDownCategory = ref<string[]>([])
-const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(
+const dateRangeSelector = ref<any>(
   null,
 )
-const baseDateRangePicker = createInput(BaseDateRangePicker, {
-  props: ['isRange'],
-})
+// const baseDateRangePicker = createInput(BaseDateRangePicker, {
+//   props: ['isRange'],
+// })
 
 const categoryOption = computed(() => {
   return query.value.type === 'Expense'
@@ -57,14 +55,8 @@ watch(
   { immediate: true },
 )
 
-onMounted(() => {
-  nextTick(() => {
-    castTypeOnCategory()
-  })
-  dateRangeSelector.value?.selectDateRange('This month')
-})
-
 nextTick(async () => {
+  castTypeOnCategory()
   await fetchWallet(getNode('walletForm')!.value as IWalletQuery)
 })
 
@@ -226,7 +218,7 @@ function openDeleteDialog(data: IWalletItem) {
             }"
           />
           <FormKit
-            :type="baseDateRangePicker"
+            type="baseDateRangePicker"
             label="Date :"
             name="date"
             validation="required"
@@ -234,6 +226,7 @@ function openDeleteDialog(data: IWalletItem) {
             outer-class="$reset mb-4"
             inner-class="$remove:formkit-inner"
             :is-range="true"
+            btn-selected="This month"
           />
         </FormKit>
       </div>

@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import { createInput } from '@formkit/vue'
-import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
-
 const monthStart = dayjsTz().startOf('month').startOf('day').toDate()
 const monthEnd = dayjsTz().endOf('month').startOf('day').toDate()
 const query = ref({
@@ -10,9 +7,7 @@ const query = ref({
 })
 const rateData = ref<getWalletRateAndTotalRes[]>([])
 const analysisData = ref<getAnalysisDataRes | null>(null)
-const baseDateRangePicker = createInput(BaseDateRangePicker, {
-  props: ['isRange', 'showBtn'],
-})
+
 analysisData.value = await getAnalysisData(query.value)
 rateData.value = await getWalletRateAndTotal()
 
@@ -37,7 +32,7 @@ watch(query.value, async () => {
     />
     <FormKit
       v-model="query.date"
-      :type="baseDateRangePicker"
+      type="baseDateRangePicker"
       name="date"
       validation="required"
       wrapper-class="w-[50%]"

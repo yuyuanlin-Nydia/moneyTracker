@@ -1,8 +1,15 @@
 import type { DefaultConfigOptions } from '@formkit/vue'
 import { generateClasses } from '@formkit/themes'
+import { createInput } from '@formkit/vue'
+import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
 
 const config: DefaultConfigOptions = {
   theme: 'genesis',
+  inputs: {
+    baseDateRangePicker: createInput(BaseDateRangePicker, {
+      props: ['isRange', 'showBtn', 'btnSelected'],
+    }),
+  },
   config: {
     classes: generateClasses({
       'global': {

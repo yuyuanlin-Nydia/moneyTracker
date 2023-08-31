@@ -11,11 +11,11 @@ const emits = defineEmits(['update:modelValue'])
 const showBtn = props.context.showBtn ?? true
 const btnToShow = props.context.btnToShow ?? ['This month', 'This week', 'Today']
 const isRange = props.context.isRange as boolean
-
-defineExpose({
-  selectDateRange,
-})
 const dateRangeTextBtn = ref<string>('')
+
+onMounted(() => {
+  dateRangeTextBtn.value = props.context.btnSelected as string
+})
 
 const date = computed({
   get() {

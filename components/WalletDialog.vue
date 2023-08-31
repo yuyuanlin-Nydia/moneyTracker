@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import '@vuepic/vue-datepicker/dist/main.css'
 import dayjs from 'dayjs'
-import { createInput } from '@formkit/vue'
-import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
 
 interface Props {
   title: string
@@ -29,9 +27,6 @@ const expenseTypeOption = ref(expenseCategory)
 const incomeTypeOption = ref(incomeCategory)
 const { dialogRef, onDialogOK, onDialogHide } = useDialogPlugin()
 const localWalletItem = ref(props.walletItem)
-const baseDateRangePicker = createInput(BaseDateRangePicker, {
-  props: ['showBtn', 'value'],
-})
 
 const categoryOption = computed(() => {
   return (localWalletItem.value.type === 'Expense'
@@ -91,12 +86,12 @@ function cancel() {
         />
         <FormKit
           :value="date"
-          :type="baseDateRangePicker"
+          type="baseDateRangePicker"
           label="Date :"
           name="date"
           validation="required"
           wrapper-class="$remove:items-center items-start"
-          inner-class="$remove:formkit-inner w-60"
+          inner-class="$remove:formkit-inner w-44"
           :show-btn="false"
         />
         <FormKit
