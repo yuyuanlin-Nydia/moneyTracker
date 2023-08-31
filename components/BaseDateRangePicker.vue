@@ -3,17 +3,15 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import type { FormKitFrameworkContext } from '@formkit/core'
 
-type IBtnText = 'This month' | 'This week' | 'Today'
-
 const props = withDefaults(defineProps<{
-  showBtn?: boolean
-  btnToShow?: IBtnText[]
   context: FormKitFrameworkContext
 }>(), {
-  showBtn: true,
-  btnToShow: () => ['This month', 'This week', 'Today'],
 })
 const emits = defineEmits(['update:modelValue'])
+const showBtn = props.context.showBtn ?? true
+const btnToShow = props.context.btnToShow ?? ['This month', 'This week', 'Today']
+const isRange = props.context.isRange as boolean
+
 defineExpose({
   selectDateRange,
 })
@@ -56,8 +54,18 @@ function selectDateRange(rangeTag: string) {
 <template>
   <div>
     <VueDatePicker
-      v-bind="context.attrs" :id="context.id" :model-value="date" auto-apply format="yyyy-MM-dd" :enable-time-picker="false"
-      range :name="context.node.name" :disabled="context.disabled" class="baseDateRangePicker" :class="[...context.classes.input]" @update:model-value="context.node.input($event);dateRangeTextBtn = ''"
+      v-bind="context.attrs"
+      :id="context.id"
+      auto-apply
+      format="yyyy-MM-dd"
+      :range="isRange"
+      :model-value="context._value"
+      :enable-time-picker="false"
+      :name="context.node.name"
+      :disabled="context.disabled"
+      class="baseDateRangePicker"
+      :class="[...context.classes.input]"
+      @update:model-value="context.node.input($event);dateRangeTextBtn = ''"
       @blur="context.handlers.blurs"
     />
     <div v-if="showBtn" class="mt-4">
@@ -71,9 +79,3 @@ function selectDateRange(rangeTag: string) {
     </div>
   </div>
 </template>
-
-<style>
-.formkit-input .multiselect {
-  padding: 0
-}
-</style>

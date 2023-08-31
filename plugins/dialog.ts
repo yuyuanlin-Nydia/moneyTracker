@@ -1,12 +1,8 @@
 import { createApp } from 'vue'
+import { defaultConfig, plugin } from '@formkit/vue'
+import config from '@/formkit.config'
 
 type AnyFn = (data?: any) => any
-
-export default {
-  open(component: Component, props: Record<string, any>) {
-    return createDialog(component, props)
-  },
-}
 
 const createDialog = function (dialog: Component, props: Record<string, any>) {
   const container = createNode('dialog')
@@ -48,6 +44,15 @@ const createDialog = function (dialog: Component, props: Record<string, any>) {
     },
   })
 
-  dialogCom.mount(container)
+  dialogCom
+    .use(plugin, defaultConfig((config)))
+    .mount(container)
+
   return dialogAPI
+}
+
+export default {
+  open(component: Component, props: Record<string, any>) {
+    return createDialog(component, props)
+  },
 }

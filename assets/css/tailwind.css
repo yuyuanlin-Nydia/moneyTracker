@@ -41,3 +41,7 @@
 .formkit-options > li{
   display: inline-block;
 }
+
+.formkit-outer *{
+  box-sizing: content-box !important;
+}

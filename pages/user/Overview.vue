@@ -37,9 +37,14 @@ walletTotalAmount.value = await getWalletTotalAmount()
             </p>
           </div>
           <div class="flex flex-col col-span-2">
-            <div class="mb-4">
-              <BaseSelect v-model="type" :list="WalletType" :custom-class="['w-full']" />
-            </div>
+            <FormKit
+              id="type"
+              v-model="type"
+              type="select"
+              name="type"
+              :options="WalletType"
+              inner-class="bg-white w-full"
+            />
             <div v-for="item in walletTotalAmount" :key="item._id" class="center p-2 text-gray-300 bg-primary-200 dark:bg-info-500 rounded-xl mb-3">
               <icon
                 class="text-5xl font-extrabold mr-3 text-secondary-100"

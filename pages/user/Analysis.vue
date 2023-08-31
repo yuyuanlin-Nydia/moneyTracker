@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { createInput } from '@formkit/vue'
+import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
+
 const monthStart = dayjsTz().startOf('month').startOf('day').toDate()
 const monthEnd = dayjsTz().endOf('month').startOf('day').toDate()
 const query = ref({
@@ -7,7 +10,9 @@ const query = ref({
 })
 const rateData = ref<getWalletRateAndTotalRes[]>([])
 const analysisData = ref<getAnalysisDataRes | null>(null)
-
+const baseDateRangePicker = createInput(BaseDateRangePicker, {
+  props: ['isRange', 'showBtn'],
+})
 analysisData.value = await getAnalysisData(query.value)
 rateData.value = await getWalletRateAndTotal()
 
@@ -21,14 +26,26 @@ watch(query.value, async () => {
     <AnalysisRateCard v-for="item of rateData" :key="item.type" :item="item" />
   </div>
   <div class="border border-secondary-100 rounded-md bg-primary-100 dark:bg-primary-600 p-4 mb-4">
-    <div class="mb-4">
-      <div class="mb-4">
-        <BaseSelect v-model="query.type" :list="WalletType" />
-      </div>
-      <div class="w-[50%]">
-        <BaseDateRangePicker v-model="query.date" :show-btn="false" />
-      </div>
-    </div>
+    <FormKit
+      id="type"
+      v-model="query.type"
+      type="select"
+      name="type"
+      :options="WalletType"
+      inner-class="bg-white w-32"
+      validation="required"
+    />
+    <FormKit
+      v-model="query.date"
+      :type="baseDateRangePicker"
+      name="date"
+      validation="required"
+      wrapper-class="w-[50%]"
+      outer-class="$reset mb-4"
+      inner-class="$remove:formkit-inner"
+      :is-range="true"
+      :show-btn="false"
+    />
     <div class="card bg-primary-200 dark:bg-primary-400 mb-6">
       <p class="text-2xl text-gray-200 mb-4">
         Line Chart

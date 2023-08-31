@@ -29,7 +29,9 @@ const sideDownCategory = ref<string[]>([])
 const dateRangeSelector = ref<InstanceType<typeof BaseDateRangePicker> | null>(
   null,
 )
-const baseDateRangePicker = createInput(BaseDateRangePicker)
+const baseDateRangePicker = createInput(BaseDateRangePicker, {
+  props: ['isRange'],
+})
 
 const categoryOption = computed(() => {
   return query.value.type === 'Expense'
@@ -56,7 +58,9 @@ watch(
 )
 
 onMounted(() => {
-  castTypeOnCategory()
+  nextTick(() => {
+    castTypeOnCategory()
+  })
   dateRangeSelector.value?.selectDateRange('This month')
 })
 
@@ -206,7 +210,7 @@ function openDeleteDialog(data: IWalletItem) {
             name="type"
             label="Type :"
             :options="walletTypeOption"
-            inner-class="inline"
+            inner-class="inline w-56"
             validation="required"
           />
           <FormKit
@@ -227,8 +231,9 @@ function openDeleteDialog(data: IWalletItem) {
             name="date"
             validation="required"
             wrapper-class="$remove:items-center items-start"
+            outer-class="$reset mb-4"
             inner-class="$remove:formkit-inner"
-            prefix-icon="email"
+            :is-range="true"
           />
         </FormKit>
       </div>

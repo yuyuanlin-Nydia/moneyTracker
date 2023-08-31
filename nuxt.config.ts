@@ -9,14 +9,12 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/color-mode',
     '@formkit/nuxt',
+    '@nuxtjs/tailwindcss',
   ],
   imports: {
     // 自動import 不用import {useUser} from '~/stores/User'
     dirs: ['stores', 'const', 'helper', 'types'],
   },
-  css: [
-    '@/assets/css/main.css',
-  ],
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -42,9 +40,4 @@ export default defineNuxtConfig({
     preference: 'dark',
     fallback: 'dark',
   },
-  // vue: {
-  //   compilerOptions: {
-  //     isCustomElement: tag => ['FormKit'].includes(tag),
-  //   },
-  // },
 })

@@ -1,11 +1,3 @@
-const StringIsNumber = (value: any) => Number.isNaN(Number(value)) === false
-
-export function ToArray(enumName: any) {
-  return Object.keys(enumName)
-    .filter(StringIsNumber)
-    .map(key => ({ value: key, name: enumName[key] }))
-}
-
 export function mergeArrays(arr1: Array<any> = [], arr2: Array<any> = []) {
   let res = []
   res = arr1.map((_id) => {

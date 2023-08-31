@@ -15,13 +15,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    okText: {
-      validator(value: string) {
-        return ['Save', 'Delete'].includes(value)
-      },
-      required: false,
-      default: 'Save',
-    },
   },
   emits: ['cancel', 'confirm'],
   setup(props) {
@@ -83,29 +76,10 @@ export default defineComponent({
               >
                 {{ title }}
               </DialogTitle>
-
-              <div class="my-5">
+              <div class="mt-5">
                 <p class="text-sm dark:text-gray-200">
                   <slot name="content" />
                 </p>
-              </div>
-
-              <div class="mt-4">
-                <button
-                  type="button"
-                  class="btn mr-4 text-white "
-                  :class="okText === 'Save' ? 'bg-green-600 hover:bg-green-400' : 'bg-red-600 :hover:bg-red-400'"
-                  @click="$emit('confirm')"
-                >
-                  {{ okText }}
-                </button>
-                <button
-                  type="button"
-                  class="btn bg-blue-600 text-white hover:bg-blue-400"
-                  @click="$emit('cancel')"
-                >
-                  Cancel
-                </button>
               </div>
             </DialogPanel>
           </TransitionChild>

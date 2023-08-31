@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import dayjs from 'dayjs'
+import { createInput } from '@formkit/vue'
+import BaseDateRangePicker from '~/components/BaseDateRangePicker.vue'
 
 interface Props {
   title: string
@@ -24,11 +25,14 @@ const props = withDefaults(defineProps<Props>(), {
     }
   },
 })
-const walletTypeOption = ToArray(WalletTypeEnum)
 const expenseTypeOption = ref(expenseCategory)
 const incomeTypeOption = ref(incomeCategory)
 const { dialogRef, onDialogOK, onDialogHide } = useDialogPlugin()
 const localWalletItem = ref(props.walletItem)
+const baseDateRangePicker = createInput(BaseDateRangePicker, {
+  props: ['showBtn', 'value'],
+})
+
 const categoryOption = computed(() => {
   return (localWalletItem.value.type === 'Expense'
     ? expenseTypeOption.value
@@ -50,8 +54,8 @@ watch(
   },
 )
 
-function confirm() {
-  onDialogOK({ ...localWalletItem.value })
+function confirm(data: IWalletQuery & Pick<IWalletItem, 'item' & 'amount' >) {
+  onDialogOK(data)
 }
 
 function cancel() {
@@ -63,69 +67,66 @@ function cancel() {
   <BaseDialog
     v-bind="props"
     ref="dialogRef"
-    @confirm="confirm"
-    @cancel="cancel"
   >
     <template #content>
-      <div class="my-3">
-        <label for="" class="inline-block w-20">Type :</label>
-        <select
-          v-model="localWalletItem.type"
-          class="input w-60"
-        >
-          <option
-            v-for="walletType in walletTypeOption"
-            :key="walletType.name"
-            :value="walletType.name"
-          >
-            {{ walletType.name }}
-          </option>
-        </select>
-      </div>
-      <div class="my-3">
-        <label for="" class="inline-block w-20">Category :</label>
-        <select
-          v-model="localWalletItem.category"
-          class="input w-60"
-        >
-          <option
-            v-for="category in categoryOption"
-            :key="category"
-            :value="category"
-          >
-            {{ category }}
-          </option>
-        </select>
-      </div>
-      <div class="my-3">
-        <label for="" class="inline-block w-20 ">Date :</label>
-        <div class="inline-block align-text-top w-60">
-          <VueDatePicker
-            v-model="date"
-            auto-apply
-            format="yyyy-MM-dd"
-            menu-class-name="dp-custom-menu"
-            position="left"
-            :enable-time-picker="false"
+      <FormKit
+        v-model="localWalletItem"
+        type="form"
+        :actions="false"
+        @submit="confirm"
+      >
+        <FormKit
+          type="select"
+          label="Type : "
+          name="type"
+          :options="WalletType"
+          inner-class="w-60"
+        />
+        <FormKit
+          type="select"
+          label="Category : "
+          name="category"
+          :options="categoryOption"
+          inner-class="w-60"
+        />
+        <FormKit
+          :value="date"
+          :type="baseDateRangePicker"
+          label="Date :"
+          name="date"
+          validation="required"
+          wrapper-class="$remove:items-center items-start"
+          inner-class="$remove:formkit-inner w-60"
+          :show-btn="false"
+        />
+        <FormKit
+          type="text"
+          label="Item : "
+          name="item"
+          inner-class="w-60"
+          validation="required"
+        />
+        <FormKit
+          type="text"
+          label="Amount : "
+          name="amount"
+          inner-class="w-60"
+          validation="required|number"
+        />
+        <div class="flex gap-2 mt-8">
+          <FormKit
+            type="submit"
+            label="Save"
+            input-class="$remove:bg-secondary-100 bg-green-700 hover:bg-green-400"
+          />
+          <FormKit
+            type="button"
+            label="Cancel"
+            input-class="bg-blue-700 hover:bg-blue-400"
+            @click="cancel"
           />
         </div>
-      </div>
-      <div class="my-3">
-        <label for="" class="inline-block w-20">Item :</label>
-        <input
-          v-model="localWalletItem.item"
-          type="text"
-          class="input w-60"
-        >
-      </div>
-      <div class="my-3">
-        <label for="" class="inline-block w-20">Amount :</label>
-        <input
-          v-model.number="localWalletItem.amount"
-          type="text"
-          class="input w-60"
-        >
-      </div>
+      </FormKit>
     </template>
   </BaseDialog>
 </template>
