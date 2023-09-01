@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+const user = useUserStore()
+await user.getUser()
+
 useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${titleChunk} - MoneyTracker` : 'MoneyTracker'
